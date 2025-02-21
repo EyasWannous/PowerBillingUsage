@@ -2,7 +2,6 @@
 using PowerBillingUsage.Core.Enums;
 using PowerBillingUsage.Core.Models;
 using PowerBillingUsage.Core.Services;
-using System.Collections.Generic;
 
 namespace PowerBillingUsage.Core.Test;
 
@@ -17,8 +16,8 @@ public class BillingCalculatorTests
             0,
             new Bill(
                 BillingType: BillingType.Residential,
-                StartAt: DefualtStartDate, 
-                EndAt: DefualtEndDate, 
+                StartAt: DefualtStartDate,
+                EndAt: DefualtEndDate,
                 BreakDowns: []
             )
         ],
@@ -153,10 +152,10 @@ public class BillingCalculatorTests
         var endDate = DateOnly.Parse(endAt);
 
         Action act = () => BillingCalculator.CalculateResidentialBill(100, startDate, endDate);
-        
+
         act.Should().Throw<ArgumentException>().WithMessage("The start date must not be after the end date.*");
     }
-    
+
     [Theory]
     [InlineData("2025-01-31", "2025-01-01")]
     public void CalculateCommercialConsumptionCost_ShouldThrowArgumentExceptionForInvalidDateRange(string startAt, string endAt)
@@ -171,7 +170,7 @@ public class BillingCalculatorTests
 
     [Theory]
     [MemberData(nameof(GetValidatedResidentialBillingData))]
-    public void CalculateResidentialConsumptionCost_ShouldReturnExpectedValue(int consumption, Bill expected) 
+    public void CalculateResidentialConsumptionCost_ShouldReturnExpectedValue(int consumption, Bill expected)
     {
         var result = BillingCalculator.CalculateResidentialBill(consumption, DefualtStartDate, DefualtEndDate);
 
