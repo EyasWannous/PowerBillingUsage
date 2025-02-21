@@ -2,9 +2,9 @@
 
 namespace PowerBillingUsage.Core.Configurations;
 
-public class BillingConfiguration
+internal class BillingConfiguration
 {
-    public static readonly List<Tier> ResidentialTiers =
+    internal static readonly List<Tier> ResidentialTiers =
     [
         new Tier { Name = "Up to 160 KWh", UpperLimitInKWh = 160, Rate = 0.05m },
         new Tier { Name = "Up to 300 KWh", UpperLimitInKWh = 300, Rate = 0.10m },
@@ -15,7 +15,7 @@ public class BillingConfiguration
         new Tier { Name = "Above 1000 KWh", UpperLimitInKWh = int.MaxValue, Rate = 0.37m }
     ];
 
-    public static readonly List<Tier> CommercialTiers =
+    internal static readonly List<Tier> CommercialTiers =
     [
         new Tier { Name = "Up to 200 KWh", UpperLimitInKWh = 200, Rate = 0.08m },
         new Tier { Name = "Up to 500 KWh", UpperLimitInKWh = 500, Rate = 0.15m },

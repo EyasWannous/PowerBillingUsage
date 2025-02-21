@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace PowerBillingUsage.Core.Enums;
 
-public abstract class SmartEnum<TEnum, TValue> where TEnum : SmartEnum<TEnum, TValue> where TValue: notnull
+public abstract class SmartEnum<TEnum, TValue> where TEnum : SmartEnum<TEnum, TValue> where TValue : notnull
 {
     private static readonly ConcurrentDictionary<TValue, TEnum> _items = new();
 

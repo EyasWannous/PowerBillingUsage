@@ -1,5 +1,4 @@
-﻿using PowerBillingUsage.Core.Configurations;
-using PowerBillingUsage.Core.Enums;
+﻿using PowerBillingUsage.Core.Enums;
 using PowerBillingUsage.Core.Models;
 
 namespace PowerBillingUsage.Core.Services;
@@ -14,7 +13,7 @@ public class BillingCalculator
         if (consumptionInKWh is 0)
             return new Bill(BillingType.Residential, startAt, endAt, []);
 
-        var breakDowns = CalculateBreakdowns(consumptionInKWh, BillingConfiguration.ResidentialTiers);
+        var breakDowns = CalculateBreakdowns(consumptionInKWh, BillingType.Residential.Tiers);
 
         return new Bill(BillingType.Residential, startAt, endAt, breakDowns);
     }
@@ -27,7 +26,7 @@ public class BillingCalculator
         if (consumptionInKWh is 0)
             return new Bill(BillingType.Commercial, startAt, endAt, []);
 
-        var breakDowns = CalculateBreakdowns(consumptionInKWh, BillingConfiguration.CommercialTiers);
+        var breakDowns = CalculateBreakdowns(consumptionInKWh, BillingType.Commercial.Tiers);
 
         return new Bill(BillingType.Commercial, startAt, endAt, breakDowns);
     }
