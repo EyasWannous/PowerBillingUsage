@@ -5,10 +5,16 @@ namespace PowerBillingUsage.Core.Enums;
 
 //public enum BillingType { Residential, Commercial }
 
-public class BillingType(int value, string name, List<Tier> tiers) : SmartEnum<BillingType, int>(value, name)
+public class BillingType : SmartEnum<BillingType, int>
 {
-    public static readonly BillingType Residential = new(1, "Residential", BillingConfiguration.ResidentialTiers);
-    public static readonly BillingType Commercial = new(2, "Commercial", BillingConfiguration.CommercialTiers);
+    public static readonly BillingType Residential = new(1, nameof(Residential), BillingConfiguration.ResidentialTiers);
+    public static readonly BillingType Commercial = new(2, nameof(Commercial), BillingConfiguration.CommercialTiers);
 
-    public List<Tier> Tiers { get; } = tiers;
+    private BillingType(int value, string name, List<Tier> tiers) 
+        : base(value, name)
+    {
+        Tiers = tiers;
+    }
+
+    public List<Tier> Tiers { get; } = [];
 }
