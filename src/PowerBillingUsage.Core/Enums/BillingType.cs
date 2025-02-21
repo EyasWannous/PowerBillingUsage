@@ -1,7 +1,13 @@
 ﻿namespace PowerBillingUsage.Core.Enums;
 
-public enum BillingType
+//public enum BillingType
+//{
+//    Residential,
+//    Commercial
+//}
+
+public class BillingType(int value, string name) : SmartEnum<BillingType, int>(value, name)
 {
-    Residential,
-    Commercial
+    public static readonly BillingType Residential = new(1, "Residential");
+    public static readonly BillingType Commercial = new(2, "Commercial");
 }

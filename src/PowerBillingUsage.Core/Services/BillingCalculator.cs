@@ -6,7 +6,7 @@ namespace PowerBillingUsage.Core.Services;
 
 public class BillingCalculator
 {
-    public static Bill CalculateResidentialBill(int consumptionInKWh, DateOnly startAt, DateOnly endAt)
+    public static Bill CalculateResidentialBill(int consumptionInKWh, DateTime startAt, DateTime endAt)
     {
         if (startAt > endAt)
             throw new ArgumentException("The start date must not be after the end date..", nameof(startAt));
@@ -14,12 +14,12 @@ public class BillingCalculator
         if (consumptionInKWh is 0)
             return new Bill(BillingType.Residential, startAt, endAt, []);
 
-        List<BillDetail> breakDowns = CalculateBreakdowns(consumptionInKWh, BillingConfiguration.ResidentialTiers);
+        var breakDowns = CalculateBreakdowns(consumptionInKWh, BillingConfiguration.ResidentialTiers);
 
         return new Bill(BillingType.Residential, startAt, endAt, breakDowns);
     }
 
-    public static Bill CalculateCommercialBill(int consumptionInKWh, DateOnly startAt, DateOnly endAt)
+    public static Bill CalculateCommercialBill(int consumptionInKWh, DateTime startAt, DateTime endAt)
     {
         if (startAt > endAt)
             throw new ArgumentException("The start date must not be after the end date..", nameof(startAt));
@@ -27,7 +27,7 @@ public class BillingCalculator
         if (consumptionInKWh is 0)
             return new Bill(BillingType.Commercial, startAt, endAt, []);
 
-        List<BillDetail> breakDowns = CalculateBreakdowns(consumptionInKWh, BillingConfiguration.CommercialTiers);
+        var breakDowns = CalculateBreakdowns(consumptionInKWh, BillingConfiguration.CommercialTiers);
 
         return new Bill(BillingType.Commercial, startAt, endAt, breakDowns);
     }
