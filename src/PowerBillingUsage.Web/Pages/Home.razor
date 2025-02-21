@@ -14,14 +14,14 @@
                     <div class="d-flex align-items-end justify-content-around">
                         <div>
                             <label for="startAt" class="form-label">Cycle starts at</label>
-                            <InputDate Type="InputDateType.Date" id="startAt" @bind-Value="billingRequest.StartAt" class="form-control" />
+                            <InputDate Type="InputDateType.DateTimeLocal" id="startAt" @bind-Value="billingRequest.StartAt" class="form-control" />
                         </div>
                         <div>
                             =>
                         </div>
                         <div>
                             <label for="endAt" class="form-label">Cycle ends at</label>
-                            <InputDate Type="InputDateType.Date" id="endAt" @bind-Value="billingRequest.EndAt" class="form-control" />
+                            <InputDate Type="InputDateType.DateTimeLocal" id="endAt" @bind-Value="billingRequest.EndAt" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                     <InputRadioGroup @bind-Value="billingRequest.BillingType" class="form-check">
                         <div class="d-flex align-items-end justify-content-start">
                             <div class="form-check ps-0 me-3">
-                                <InputRadio id="residential" class="btn-check" Value="BillingType.Residential"/>
+                                <InputRadio id="residential" class="btn-check" Value="BillingType.Residential.Value"/>
                                 <label for="residential" class="btn btn-outline-secondary btn-sm bg-opacity-50">
                                     @* <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house"> *@
                                     @*     <path d="M8"></path> *@
@@ -48,7 +48,7 @@
                                 </label>
                             </div>
                             <div class="form-check ps-0">
-                                <InputRadio id="commercial" class="btn-check" Value="BillingType.Commercial" />
+                                <InputRadio id="commercial" class="btn-check" Value="BillingType.Commercial.Value" />
                                 <label for="commercial" class="btn btn-outline-primary btn-sm bg-opacity-50">
                                     @* <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building"> *@
                                     @*     <path d="M8"></path> *@
@@ -134,7 +134,7 @@
 
     private void GenerateBill()
     {
-        if (billingRequest.BillingType is BillingType.Residential)
+        if (billingRequest.BillingType == BillingType.Residential.Value)
             bill = BillingCalculator.CalculateResidentialBill(billingRequest.Consumption, billingRequest.StartAt, billingRequest.EndAt);
         else
             bill = BillingCalculator.CalculateCommercialBill(billingRequest.Consumption, billingRequest.StartAt, billingRequest.EndAt);

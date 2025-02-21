@@ -7,8 +7,8 @@ namespace PowerBillingUsage.Core.Test;
 
 public class BillingCalculatorTests
 {
-    private static readonly DateOnly DefualtStartDate = new(2025, 1, 1);
-    private static readonly DateOnly DefualtEndDate = new(2025, 1, 31);
+    private static readonly DateTime DefualtStartDate = new(2025, 01, 01, 20, 10, 00);
+    private static readonly DateTime DefualtEndDate = new(2025, 01, 31, 03, 15, 00);
 
     public static IEnumerable<object[]> GetValidatedResidentialBillingData =>
     [
@@ -148,8 +148,8 @@ public class BillingCalculatorTests
     [InlineData("2025-01-31", "2025-01-01")]
     public void CalculateResidentialConsumptionCost_ShouldThrowArgumentExceptionForInvalidDateRange(string startAt, string endAt)
     {
-        var startDate = DateOnly.Parse(startAt);
-        var endDate = DateOnly.Parse(endAt);
+        var startDate = DateTime.Parse(startAt);
+        var endDate = DateTime.Parse(endAt);
 
         Action act = () => BillingCalculator.CalculateResidentialBill(100, startDate, endDate);
 
@@ -160,8 +160,8 @@ public class BillingCalculatorTests
     [InlineData("2025-01-31", "2025-01-01")]
     public void CalculateCommercialConsumptionCost_ShouldThrowArgumentExceptionForInvalidDateRange(string startAt, string endAt)
     {
-        var startDate = DateOnly.Parse(startAt);
-        var endDate = DateOnly.Parse(endAt);
+        var startDate = DateTime.Parse(startAt);
+        var endDate = DateTime.Parse(endAt);
 
         Action act = () => BillingCalculator.CalculateCommercialBill(100, startDate, endDate);
 
