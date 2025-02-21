@@ -7,7 +7,7 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
 {
     private static readonly Dictionary<int, TEnum> Enumerations = CreateEnumerations();
 
-    protected Enumeration(int value, string name) 
+    protected Enumeration(int value, string name)
     {
         Value = value;
         Name = name;
@@ -18,18 +18,18 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
 
     public static TEnum? FromValue(int value)
     {
-        if(!Enumerations.TryGetValue(value, out TEnum? result))
+        if (!Enumerations.TryGetValue(value, out TEnum? result))
             return default;
 
         return result;
     }
 
-    public static TEnum? FromName(string name) 
+    public static TEnum? FromName(string name)
         => Enumerations.Values.SingleOrDefault(e => e.Name == name);
 
     public bool Equals(Enumeration<TEnum>? other)
     {
-        if(other is null)
+        if (other is null)
             return false;
 
         return GetType() == other.GetType() &&
@@ -55,10 +55,10 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
                 BindingFlags.Static |
                 BindingFlags.FlattenHierarchy
             )
-            .Where(fieldInfo => 
+            .Where(fieldInfo =>
                 enumerationType.IsAssignableFrom(fieldInfo.FieldType)
             )
-            .Select(fieldInfo => 
+            .Select(fieldInfo =>
                 (TEnum)fieldInfo.GetValue(default)!
             )
         ;
