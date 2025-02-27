@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{52C051F5-D931-4C65-8780-A30BD8EB3E2C}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBillingUsage.Core.Test", "tests\PowerBillingUsage.Core.Test\PowerBillingUsage.Core.Test.csproj", "{8D71B3A5-B039-4994-8AAD-4360470B00D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBillingUsage.Web", "src\PowerBillingUsage.Web\PowerBillingUsage.Web.csproj", "{921025F0-F574-4D5B-8FF2-ED1E65F1AB20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBillingUsage.Infrastructure", "src\PowerBillingUsage.Infrastructure\PowerBillingUsage.Infrastructure.csproj", "{91B26300-FC1D-4C65-8B70-11896A2E423B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{921025F0-F574-4D5B-8FF2-ED1E65F1AB20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{921025F0-F574-4D5B-8FF2-ED1E65F1AB20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{921025F0-F574-4D5B-8FF2-ED1E65F1AB20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91B26300-FC1D-4C65-8B70-11896A2E423B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91B26300-FC1D-4C65-8B70-11896A2E423B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91B26300-FC1D-4C65-8B70-11896A2E423B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91B26300-FC1D-4C65-8B70-11896A2E423B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,5 +45,6 @@ Global
 		{6F6F60B5-D78F-41F3-84A0-0CB77474102B} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
 		{8D71B3A5-B039-4994-8AAD-4360470B00D9} = {8730451A-A097-47E2-8926-FEA04C2A9772}
 		{921025F0-F574-4D5B-8FF2-ED1E65F1AB20} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
+		{91B26300-FC1D-4C65-8B70-11896A2E423B} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
 	EndGlobalSection
 EndGlobal

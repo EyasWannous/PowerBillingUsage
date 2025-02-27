@@ -8,8 +8,10 @@ public abstract class SmartEnum<TEnum, TValue> where TEnum : SmartEnum<TEnum, TV
 {
     private static readonly ConcurrentDictionary<TValue, TEnum> _items = new();
 
-    public TValue Value { get; }
-    public string Name { get; }
+    public TValue Value { get; protected init; }
+    public string Name { get; protected init; }
+
+    protected SmartEnum() { }
 
     protected SmartEnum(TValue value, string name)
     {

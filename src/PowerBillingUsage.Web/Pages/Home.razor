@@ -2,6 +2,7 @@
 @using PowerBillingUsage.Core.Enums
 @using PowerBillingUsage.Core.Models
 @using PowerBillingUsage.Core.Services
+@using PowerBillingUsage.Core.IRepository
 @using PowerBillingUsage.Web.Requests
 
 <h3 class="text-center mt-4">Electricity Billing</h3>
@@ -9,26 +10,26 @@
 <div class="container mt-4">
     <div class="row g-4">
         <div class="col-md-6">
-            <EditForm Model="@billingRequest" OnValidSubmit="GenerateBill">
+            <EditForm Model="@billingRequest" OnValidSubmit="GenerateBillAsync">
                 <div class="mb-3">
                     <div class="d-flex align-items-end justify-content-around">
                         <div>
                             <label for="startAt" class="form-label">Cycle starts at</label>
-                            <InputDate Type="InputDateType.DateTimeLocal" id="startAt" @bind-Value="billingRequest.StartAt" class="form-control" />
+                            <InputDate Type="InputDateType.DateTimeLocal" id="startAt" @bind-Value="billingRequest.StartAt" class="form-control" disabled="@isLoading" />
                         </div>
                         <div>
                             =>
                         </div>
                         <div>
                             <label for="endAt" class="form-label">Cycle ends at</label>
-                            <InputDate Type="InputDateType.DateTimeLocal" id="endAt" @bind-Value="billingRequest.EndAt" class="form-control" />
+                            <InputDate Type="InputDateType.DateTimeLocal" id="endAt" @bind-Value="billingRequest.EndAt" class="form-control" disabled="@isLoading" />
                         </div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="consumption" class="form-label">Consumption</label>
                     <div class="input-group mb-3">
-                        <input type="range" id="consumption" class="form-range" min="0" max="10000" step="10" @bind="billingRequest.Consumption" @bind:event="oninput" />
+                        <input type="range" id="consumption" class="form-range" min="0" max="10000" step="10" @bind="billingRequest.Consumption" @bind:event="oninput" disabled="@isLoading" />
                         <span class="badge text-bg-dark fs-3">
                             @billingRequest.Consumption KWh
                         </span>
@@ -36,24 +37,17 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Billing type</label>
-                    <InputRadioGroup @bind-Value="billingRequest.BillingType" class="form-check">
+                    <InputRadioGroup @bind-Value="billingRequest.BillingType" class="form-check" disabled="@isLoading">
                         <div class="d-flex align-items-end justify-content-start">
                             <div class="form-check ps-0 me-3">
-                                <InputRadio id="residential" class="btn-check" Value="BillingType.Residential.Value"/>
-                                <label for="residential" class="btn btn-outline-secondary btn-sm bg-opacity-50">
-                                    @* <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house"> *@
-                                    @*     <path d="M8"></path> *@
-                                    @* </svg> *@
+                                <InputRadio id="residential" class="btn-check" Value="BillingType.Residential.Value" disabled="@isLoading" />
+                                <label for="residential" class="btn btn-outline-secondary btn-sm bg-opacity-50 @(isLoading ? "disabled" : "")">
                                     Residential
                                 </label>
                             </div>
                             <div class="form-check ps-0">
-                                <InputRadio id="commercial" class="btn-check" Value="BillingType.Commercial.Value" />
-                                <label for="commercial" class="btn btn-outline-primary btn-sm bg-opacity-50">
-                                    @* <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building"> *@
-                                    @*     <path d="M8"></path> *@
-                                    @*     <path d="M8"></path> *@
-                                    @* </svg> *@
+                                <InputRadio id="commercial" class="btn-check" Value="BillingType.Commercial.Value" disabled="@isLoading" />
+                                <label for="commercial" class="btn btn-outline-primary btn-sm bg-opacity-50 @(isLoading ? "disabled" : "")">
                                     Commercial
                                 </label>
                             </div>
@@ -61,11 +55,30 @@
                     </InputRadioGroup>
                 </div>
                 <hr />
-                <button type="submit" class="btn btn-primary">Calculate</button>
+                <button type="submit" class="btn btn-primary" disabled="@isLoading" @onclick="() => Console.WriteLine('B')">
+                    @if (isLoading)
+                    {
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span> Calculating...</span>
+                    }
+                    else
+                    {
+                        <span>Calculate</span>
+                    }
+                </button>
             </EditForm>
         </div>
         <div class="col-md-6">
-            @if (bill is not null)
+            @if (isLoading)
+            {
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p>Loading bill details...</p>
+                </div>
+            }
+            @if (bill is not null && !isLoading)
             {
                 <table class="table table-sm table-info rounded-2 p-5">
                     <thead>
@@ -73,7 +86,7 @@
                             <th colspan="4" class="text-bg-secondary">Billing type:</th>
                         </tr>
                         <tr>
-                            <th colspan="4">@bill.BillingType.ToString()</th>
+                            <th colspan="4">@bill.BillingTypeValue.ToString()</th>
                         </tr>
                         <tr>
                             <th class="text-bg-secondary">Cycle starts at</th>
@@ -86,7 +99,6 @@
                             <td class="fw-bolder">@bill.EndAt</td>
                         </tr>
                     </thead>
-
                     <tbody>
                         <tr>
                             <td colspan="4">
@@ -100,7 +112,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach(var tier in bill.BreakDowns)
+                                        @foreach (var tier in bill.BreakDowns)
                                         {
                                             <tr>
                                                 <td class="fw-bolder">@tier.TierName</td>
@@ -117,7 +129,6 @@
                     <tfoot>
                         <tr class="bg-dark text-center">
                             <th colspan="4" class="fs-3 text-bg-dark">
-                                <!--!-->
                                 <span class="text-secondary">Amount due: </span> @bill.Total.ToString("N2")<span class="text-secondary" style="font-size: .975rem;">$</span>
                             </th>
                         </tr>
@@ -127,16 +138,3 @@
         </div>
     </div>
 </div>
-
-@code {
-    private BillingRequest billingRequest = new();
-    private Bill? bill = default;
-
-    private void GenerateBill()
-    {
-        if (billingRequest.BillingType == BillingType.Residential.Value)
-            bill = BillingCalculator.CalculateResidentialBill(billingRequest.Consumption, billingRequest.StartAt, billingRequest.EndAt);
-        else
-            bill = BillingCalculator.CalculateCommercialBill(billingRequest.Consumption, billingRequest.StartAt, billingRequest.EndAt);
-    }
-}
