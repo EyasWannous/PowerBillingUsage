@@ -29,13 +29,5 @@ internal class TierEntityConfiguration : IEntityTypeConfiguration<Tier>
             }).ToArray();
 
         builder.HasData(allTiers);
-
-        //var tierIds = BillingConfiguration.ResidentialTiers
-        //    .Concat(BillingConfiguration.CommercialTiers)
-        //    .Select(t => t.Id.Id)
-        //    .ToList();
-     
-        //if (tierIds.Any(id => id == Guid.Empty))
-        //    throw new InvalidOperationException("One or more Tier IDs are Guid.Empty!");
     }
 }
