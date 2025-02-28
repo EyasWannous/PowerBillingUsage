@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBillingUsage.Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBillingUsage.API", "src\PowerBillingUsage.API\PowerBillingUsage.API.csproj", "{E32FB420-CB06-47F3-8058-15B81C6E9696}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBillingUsage.AppHost", "src\PowerBillingUsage.AppHost\PowerBillingUsage.AppHost.csproj", "{53B313E9-C276-4402-B2F7-3683EE637B0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBillingUsage.ServiceDefaults", "src\PowerBillingUsage.ServiceDefaults\PowerBillingUsage.ServiceDefaults.csproj", "{34CEF301-BDF1-425F-AF73-81668B73C497}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,14 @@ Global
 		{E32FB420-CB06-47F3-8058-15B81C6E9696}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E32FB420-CB06-47F3-8058-15B81C6E9696}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E32FB420-CB06-47F3-8058-15B81C6E9696}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53B313E9-C276-4402-B2F7-3683EE637B0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53B313E9-C276-4402-B2F7-3683EE637B0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53B313E9-C276-4402-B2F7-3683EE637B0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53B313E9-C276-4402-B2F7-3683EE637B0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34CEF301-BDF1-425F-AF73-81668B73C497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34CEF301-BDF1-425F-AF73-81668B73C497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34CEF301-BDF1-425F-AF73-81668B73C497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34CEF301-BDF1-425F-AF73-81668B73C497}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,5 +65,7 @@ Global
 		{921025F0-F574-4D5B-8FF2-ED1E65F1AB20} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
 		{91B26300-FC1D-4C65-8B70-11896A2E423B} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
 		{E32FB420-CB06-47F3-8058-15B81C6E9696} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
+		{53B313E9-C276-4402-B2F7-3683EE637B0C} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
+		{34CEF301-BDF1-425F-AF73-81668B73C497} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
 	EndGlobalSection
 EndGlobal
