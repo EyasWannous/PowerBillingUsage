@@ -1,8 +1,4 @@
 ﻿@page "/"
-@using PowerBillingUsage.Core.Enums
-@using PowerBillingUsage.Core.Models
-@using PowerBillingUsage.Core.Services
-@using PowerBillingUsage.Core.IRepository
 @using PowerBillingUsage.Web.Requests
 
 <h3 class="text-center mt-4">Electricity Billing</h3>
@@ -37,16 +33,16 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Billing type</label>
-                    <InputRadioGroup @bind-Value="billingRequest.BillingType" class="form-check" disabled="@isLoading">
+                    <InputRadioGroup @bind-Value="billingRequest.BillingTypeValue" class="form-check" disabled="@isLoading">
                         <div class="d-flex align-items-end justify-content-start">
                             <div class="form-check ps-0 me-3">
-                                <InputRadio id="residential" class="btn-check" Value="BillingType.Residential.Value" disabled="@isLoading" />
+                                <InputRadio id="residential" class="btn-check" Value="1" disabled="@isLoading" />
                                 <label for="residential" class="btn btn-outline-secondary btn-sm bg-opacity-50 @(isLoading ? "disabled" : "")">
                                     Residential
                                 </label>
                             </div>
                             <div class="form-check ps-0">
-                                <InputRadio id="commercial" class="btn-check" Value="BillingType.Commercial.Value" disabled="@isLoading" />
+                                <InputRadio id="commercial" class="btn-check" Value="2" disabled="@isLoading" />
                                 <label for="commercial" class="btn btn-outline-primary btn-sm bg-opacity-50 @(isLoading ? "disabled" : "")">
                                     Commercial
                                 </label>
@@ -86,7 +82,7 @@
                             <th colspan="4" class="text-bg-secondary">Billing type:</th>
                         </tr>
                         <tr>
-                            <th colspan="4">@bill.BillingTypeValue.ToString()</th>
+                            <th colspan="4">@bill.ShowType()</th>
                         </tr>
                         <tr>
                             <th class="text-bg-secondary">Cycle starts at</th>

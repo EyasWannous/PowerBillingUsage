@@ -1,0 +1,6 @@
+@PowerBillingUsage.API_HostAddress = http://localhost:5070
+
+GET {{PowerBillingUsage.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

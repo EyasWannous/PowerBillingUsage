@@ -9,7 +9,6 @@ public class PowerBillingUsageDbContext(DbContextOptions options) : DbContext(op
     public DbSet<Bill> Bills { get; set; }
     public DbSet<BillDetail> BillDetails { get; set; }
     public DbSet<Tier> Tiers { get; set; }
-    //public DbSet<BillingType> BillingTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,50 +1,58 @@
-﻿using PowerBillingUsage.Core.Enums;
+﻿using PowerBillingUsage.Core.ApplicationContracts;
+using PowerBillingUsage.Core.Enums;
 using PowerBillingUsage.Core.Extensions;
 using PowerBillingUsage.Core.IRepository;
 using PowerBillingUsage.Core.Models;
 
-namespace PowerBillingUsage.Core.Services;
+namespace PowerBillingUsage.Core.AppServices;
 
-public class BillingCalculator
+public class BillingCalculatorAppService : IBillingCalculatorAppService
 {
-    public static async Task<Bill> CalculateResidentialBillAsync(int consumptionInKWh, DateTime startAt, DateTime endAt, IBillRepository billRepository)
+    private readonly IBillRepository _billRepository;
+
+    public BillingCalculatorAppService(IBillRepository billRepository)
+    {
+        _billRepository = billRepository;
+    }
+
+    public async Task<Bill> CalculateCommercialBillAsync(int consumptionInKWh, DateTime startAt, DateTime endAt)
     {
         if (startAt > endAt)
             throw new ArgumentException("The start date must not be after the end date.", nameof(startAt));
 
-        return await ExecuteAndSaveAsync(() =>
+        return await ExecuteAndSaveAsync(async () =>
         {
             if (consumptionInKWh == 0)
                 return new Bill(new BillId(Guid.NewGuid()), BillingType.Residential.Value, startAt, endAt, []);
 
-            var breakDowns = CalculateBreakdowns(consumptionInKWh, BillingType.Residential.Tiers);
+            var breakDowns = await CalculateBreakdownsAsync(consumptionInKWh, BillingType.Residential.Tiers);
             return new Bill(new BillId(Guid.NewGuid()), BillingType.Residential.Value, startAt, endAt, breakDowns);
 
-        }, billRepository);
+        });
     }
 
-    public static async Task<Bill> CalculateCommercialBillAsync(int consumptionInKWh, DateTime startAt, DateTime endAt, IBillRepository billRepository)
+    public async Task<Bill> CalculateResidentialBillAsync(int consumptionInKWh, DateTime startAt, DateTime endAt)
     {
         if (startAt > endAt)
             throw new ArgumentException("The start date must not be after the end date.", nameof(startAt));
 
-        return await ExecuteAndSaveAsync(() =>
+        return await ExecuteAndSaveAsync(async () =>
         {
             if (consumptionInKWh == 0)
                 return new Bill(new BillId(Guid.NewGuid()), BillingType.Commercial.Value, startAt, endAt, []);
 
-            var breakDowns = CalculateBreakdowns(consumptionInKWh, BillingType.Commercial.Tiers);
+            var breakDowns = await CalculateBreakdownsAsync(consumptionInKWh, BillingType.Commercial.Tiers);
             return new Bill(new BillId(Guid.NewGuid()), BillingType.Commercial.Value, startAt, endAt, breakDowns);
 
-        }, billRepository);
+        });
     }
 
-    private static List<BillDetail> CalculateBreakdowns(int consumptionInKWh, List<Tier> tiers)
+    private static Task<List<BillDetail>> CalculateBreakdownsAsync(int consumptionInKWh, List<Tier> tiers)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(consumptionInKWh, nameof(consumptionInKWh));
 
         if (consumptionInKWh is 0)
-            return [];
+            return Task.FromResult<List<BillDetail>>([]);
 
         List<BillDetail> breakDowns = [];
 
@@ -72,14 +80,14 @@ public class BillingCalculator
             remainingConsumption -= tierConsumption;
         }
 
-        return breakDowns;
+        return Task.FromResult(breakDowns);
     }
 
-    private static async Task<Bill> ExecuteAndSaveAsync(Func<Bill> calculation, IBillRepository billRepository)
+    private async Task<Bill> ExecuteAndSaveAsync(Func<Task<Bill>> calculation)
     {
-        var bill = calculation();
+        var bill = await calculation();
 
-        await bill.InsertBillAsync(billRepository);
+        await bill.InsertBillAsync(_billRepository);
 
         return bill;
     }
