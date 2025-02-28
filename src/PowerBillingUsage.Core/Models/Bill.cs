@@ -5,7 +5,6 @@ namespace PowerBillingUsage.Core.Models;
 public class Bill : IEntity<BillId>
 {
     public BillId Id { get; private set; }
-    //public BillingType BillingType { get; private set; } = BillingType.Residential;
     public int BillingTypeValue { get; private set; }
     public DateTime StartAt { get; private set; }
     public DateTime EndAt { get; private set; }
