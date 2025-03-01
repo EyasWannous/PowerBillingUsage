@@ -9,6 +9,8 @@ internal class TierEntityConfiguration : IEntityTypeConfiguration<Tier>
 {
     public void Configure(EntityTypeBuilder<Tier> builder)
     {
+        builder.HasKey(x => x.Id);
+
         builder.Property(x => x.Id)
             .HasConversion(
                 tierId => tierId.Id,
@@ -18,7 +20,8 @@ internal class TierEntityConfiguration : IEntityTypeConfiguration<Tier>
 
         builder.Property(x => x.BillingTypeValue).IsRequired();
 
-        var allTiers = BillingConfiguration.ResidentialTiers.Concat(BillingConfiguration.CommercialTiers)
+        var allTiers = BillingConfiguration.ResidentialTiers
+            .Concat(BillingConfiguration.CommercialTiers)
             .Select(t => new
             {
                 Id = new TierId(t.Id.Id),

@@ -23,10 +23,10 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService
         return await ExecuteAndSaveAsync(async () =>
         {
             if (consumptionInKWh == 0)
-                return new Bill(new BillId(Guid.NewGuid()), BillingType.Residential.Value, startAt, endAt, []);
+                return new Bill(new BillId(Guid.NewGuid()), BillingType.Commercial.Value, startAt, endAt, []);
 
-            var breakDowns = await CalculateBreakdownsAsync(consumptionInKWh, BillingType.Residential.Tiers);
-            return new Bill(new BillId(Guid.NewGuid()), BillingType.Residential.Value, startAt, endAt, breakDowns);
+            var breakDowns = await CalculateBreakdownsAsync(consumptionInKWh, BillingType.Commercial.Tiers);
+            return new Bill(new BillId(Guid.NewGuid()), BillingType.Commercial.Value, startAt, endAt, breakDowns);
 
         });
     }
@@ -39,10 +39,10 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService
         return await ExecuteAndSaveAsync(async () =>
         {
             if (consumptionInKWh == 0)
-                return new Bill(new BillId(Guid.NewGuid()), BillingType.Commercial.Value, startAt, endAt, []);
+                return new Bill(new BillId(Guid.NewGuid()), BillingType.Residential.Value, startAt, endAt, []);
 
-            var breakDowns = await CalculateBreakdownsAsync(consumptionInKWh, BillingType.Commercial.Tiers);
-            return new Bill(new BillId(Guid.NewGuid()), BillingType.Commercial.Value, startAt, endAt, breakDowns);
+            var breakDowns = await CalculateBreakdownsAsync(consumptionInKWh, BillingType.Residential.Tiers);
+            return new Bill(new BillId(Guid.NewGuid()), BillingType.Residential.Value, startAt, endAt, breakDowns);
 
         });
     }

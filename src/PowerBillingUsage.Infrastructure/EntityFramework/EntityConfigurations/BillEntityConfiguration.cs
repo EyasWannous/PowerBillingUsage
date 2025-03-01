@@ -8,6 +8,8 @@ internal class BillEntityConfiguration : IEntityTypeConfiguration<Bill>
 {
     public void Configure(EntityTypeBuilder<Bill> builder)
     {
+        builder.HasKey(x => x.Id);
+
         builder.Property(x => x.Id)
             .HasConversion(
                 billId => billId.Id,
