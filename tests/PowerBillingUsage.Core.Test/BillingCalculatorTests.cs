@@ -1,11 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
-using PowerBillingUsage.Core.ApplicationContracts;
 using PowerBillingUsage.Core.AppServices;
 using PowerBillingUsage.Core.Enums;
-using PowerBillingUsage.Core.IRepository;
 using PowerBillingUsage.Core.Models;
 using PowerBillingUsage.Infrastructure.EntityFramework;
 using PowerBillingUsage.Infrastructure.EntityFramework.Repository;
