@@ -22,9 +22,9 @@ builder.Services.AddScoped<ITierRepository, TierRepository>();
 builder.Services.AddScoped<IBillingCalculatorAppService, BillingCalculatorAppService>();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowBlazor", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("https://localhost:7216")
+        policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
@@ -39,7 +39,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors("AllowBlazor");
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 

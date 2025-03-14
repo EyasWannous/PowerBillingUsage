@@ -22,22 +22,23 @@ public class BillController : ControllerBase
         try
         {
             if (input.BillingTypeValue == BillingType.Residential.Value)
-                return Ok(
-                    await _billingCalculatorAppService.CalculateResidentialBillAsync(
-                        input.Consumption,
-                        input.StartAt,
-                        input.EndAt
-                    )
-                );
-
-
-            return Ok(
-                await _billingCalculatorAppService.CalculateCommercialBillAsync(
+            {
+                var residentialBill = await _billingCalculatorAppService.CalculateResidentialBillAsync(
                     input.Consumption,
                     input.StartAt,
                     input.EndAt
-                )
+                );
+
+                return Ok(residentialBill.MapBill());
+            }
+
+            var commercialBill = await _billingCalculatorAppService.CalculateCommercialBillAsync(
+                input.Consumption,
+                input.StartAt,
+                input.EndAt
             );
+
+            return Ok(commercialBill.MapBill());
         }
         catch (Exception ex) 
         {

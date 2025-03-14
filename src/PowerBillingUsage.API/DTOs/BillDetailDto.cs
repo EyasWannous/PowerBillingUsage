@@ -1,8 +1,7 @@
-﻿namespace PowerBillingUsage.Web.Models;
+﻿namespace PowerBillingUsage.API.DTOs;
 
-public class BillDetail
+public record BillDetailDto
 {
-    public BillDetailId Id { get; set; }
     public string TierName { get; set; } = string.Empty;
     public int Consumption { get; set; }
     public decimal Rate { get; set; }
