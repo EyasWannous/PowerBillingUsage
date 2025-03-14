@@ -1,6 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 const string PowerBillingUsage_API_Name = "powerbillingusage-api";
+//const string PowerBillingUsage_API_Two_Name = "powerbillingusage-api-two";
 const string PowerBillingUsage_Web_Name = "powerbillingusage-blazor";
 const string redisCache = "rediscache";
 const string postgres = "postgres";
@@ -39,14 +40,24 @@ var powerBillingUsageApi = builder.AddProject<Projects.PowerBillingUsage_API>(Po
     .WithExternalHttpEndpoints()
     ;
 
+//var powerBillingUsageApiTwo = builder.AddProject<Projects.PowerBillingUsage_API>(PowerBillingUsage_API_Two_Name)
+//    //.WithReference(sql)
+//    .WithReference(postgresdb)
+//    .WithReference(postgresAdmindb)
+//    .WithReference(redis)
+//    .WithExternalHttpEndpoints()
+//    ;
+
 var powerBillingUsage_Web = builder.AddProject<Projects.PowerBillingUsage_Web>(PowerBillingUsage_Web_Name)
     .WithReference(powerBillingUsageApi)
+    //.WithReference(powerBillingUsageApiTwo)
     .WithReference(redis)
     ;
 
 var powerBillingUsageYarp = builder.AddYarp(yarp)
     .WithEndpoint(port: 8001, scheme: "https", targetPort: 7046)
     .WithReference(powerBillingUsageApi)
+    //.WithReference(powerBillingUsageApiTwo)
     .LoadFromConfiguration("ReverseProxy")
     ;
 
