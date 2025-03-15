@@ -1,6 +1,60 @@
-@PowerBillingUsage.API_HostAddress = http://localhost:5070
+@PowerBillingUsage.API_HostAddress = https://localhost:7046
+@PowerBillingUsage.YARP_HostAddress = https://localhost:8001
 
-GET {{PowerBillingUsage.API_HostAddress}}/weatherforecast/
+Post {{PowerBillingUsage.API_HostAddress}}/api/bill
+Content-Type: application/json
 Accept: application/json
 
+{
+  "consumption": 1940,
+  "startAt": "2025-03-14T14:12:38.009+03:00",
+  "endAt": "2025-04-14T14:12:38.036+03:00",
+  "billingTypeValue": 1
+}
+
+###
+
+Post {{PowerBillingUsage.API_HostAddress}}/api/bill
+Content-Type: application/json
+Accept: application/json
+
+{
+  "consumption": 1800,
+  "startAt": "2025-03-14T14:12:38.009+03:00",
+  "endAt": "2025-04-14T14:12:38.036+03:00",
+  "billingTypeValue": 2
+}
+
+###
+
+Post {{PowerBillingUsage.YARP_HostAddress}}/api/bill
+Content-Type: application/json
+Accept: application/json
+
+{
+  "consumption": 1940,
+  "startAt": "2025-03-14T14:12:38.009+03:00",
+  "endAt": "2025-04-14T14:12:38.036+03:00",
+  "billingTypeValue": 1
+}
+
+###
+
+Post {{PowerBillingUsage.YARP_HostAddress}}/api/bill
+Content-Type: application/json
+Accept: application/json
+
+{
+  "consumption": 1800,
+  "startAt": "2025-03-14T14:12:38.009+03:00",
+  "endAt": "2025-04-14T14:12:38.036+03:00",
+  "billingTypeValue": 2
+}
+
+###
+
+OPTIONS {{PowerBillingUsage.YARP_HostAddress}}/api/bill
+###
+
+Head {{PowerBillingUsage.YARP_HostAddress}}/api/bill
 ###

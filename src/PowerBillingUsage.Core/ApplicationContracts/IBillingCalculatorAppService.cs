@@ -1,5 +1,4 @@
-﻿using PowerBillingUsage.Core.IRepository;
-using PowerBillingUsage.Core.Models;
+﻿using PowerBillingUsage.Core.Models;
 
 namespace PowerBillingUsage.Core.ApplicationContracts;
 
