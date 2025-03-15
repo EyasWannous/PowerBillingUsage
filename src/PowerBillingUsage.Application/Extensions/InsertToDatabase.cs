@@ -1,7 +1,7 @@
-﻿using PowerBillingUsage.Core.IRepository;
-using PowerBillingUsage.Core.Models;
+﻿using PowerBillingUsage.Domain.Bills;
+using PowerBillingUsage.Domain.Tiers;
 
-namespace PowerBillingUsage.Core.Extensions;
+namespace PowerBillingUsage.Application.Extensions;
 
 internal static class InsertToDatabase
 {

@@ -1,6 +1,4 @@
-﻿using PowerBillingUsage.Core.Models;
-
-namespace PowerBillingUsage.Core.Configurations;
+﻿namespace PowerBillingUsage.Domain.Tiers.Configurations;
 
 public class BillingConfiguration
 {

@@ -1,11 +1,11 @@
-using PowerBillingUsage.Core.IRepository;
 using PowerBillingUsage.Infrastructure.EntityFramework.Repository;
 using PowerBillingUsage.Infrastructure.EntityFramework;
-using PowerBillingUsage.Core.ApplicationContracts;
 using Microsoft.EntityFrameworkCore;
-using PowerBillingUsage.Core.AppServices;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
+using PowerBillingUsage.Domain.Bills;
+using PowerBillingUsage.Domain.Tiers;
+using PowerBillingUsage.Application.Bills;
 
 var builder = WebApplication.CreateBuilder(args);
 

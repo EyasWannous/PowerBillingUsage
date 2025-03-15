@@ -1,11 +1,13 @@
-﻿namespace PowerBillingUsage.Core.Models;
+﻿using PowerBillingUsage.Domain.Abstractions;
+
+namespace PowerBillingUsage.Domain.Bills;
 
 public record BillDetail : IEntity<BillDetailId>
 {
     public BillDetailId Id { get; private set; }
     public string TierName { get; private set; } = string.Empty;
     public int Consumption { get; private set; }
-    public decimal Rate { get; private set; } 
+    public decimal Rate { get; private set; }
     public decimal Total { get; private set; }
 
     private BillDetail() { }

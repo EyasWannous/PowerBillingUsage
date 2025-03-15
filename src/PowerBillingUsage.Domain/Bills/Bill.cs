@@ -1,6 +1,6 @@
-﻿using PowerBillingUsage.Core.Enums;
+﻿using PowerBillingUsage.Domain.Abstractions;
 
-namespace PowerBillingUsage.Core.Models;
+namespace PowerBillingUsage.Domain.Bills;
 
 public class Bill : IEntity<BillId>
 {

@@ -1,4 +1,4 @@
-﻿namespace PowerBillingUsage.Core.Models;
+﻿namespace PowerBillingUsage.Domain.Abstractions;
 
 public interface IEntityId
 {
