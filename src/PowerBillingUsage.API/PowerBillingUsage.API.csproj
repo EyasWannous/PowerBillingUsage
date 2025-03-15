@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PowerBillingUsage.Core\PowerBillingUsage.Core.csproj" />
+    <ProjectReference Include="..\PowerBillingUsage.Application\PowerBillingUsage.Application.csproj" />
+    <ProjectReference Include="..\PowerBillingUsage.Domain\PowerBillingUsage.Domain.csproj" />
     <ProjectReference Include="..\PowerBillingUsage.Infrastructure\PowerBillingUsage.Infrastructure.csproj" />
     <ProjectReference Include="..\PowerBillingUsage.ServiceDefaults\PowerBillingUsage.ServiceDefaults.csproj" />
   </ItemGroup>

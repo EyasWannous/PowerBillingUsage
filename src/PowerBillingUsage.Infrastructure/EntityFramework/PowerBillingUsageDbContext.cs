@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PowerBillingUsage.Core.Enums;
-using PowerBillingUsage.Core.Models;
+using PowerBillingUsage.Domain.Bills;
+using PowerBillingUsage.Domain.Tiers;
 
 namespace PowerBillingUsage.Infrastructure.EntityFramework;
 

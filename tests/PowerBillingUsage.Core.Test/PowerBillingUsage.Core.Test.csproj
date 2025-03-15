@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PowerBillingUsage.Core\PowerBillingUsage.Core.csproj" />
+    <ProjectReference Include="..\..\src\PowerBillingUsage.Application\PowerBillingUsage.Application.csproj" />
     <ProjectReference Include="..\..\src\PowerBillingUsage.Infrastructure\PowerBillingUsage.Infrastructure.csproj" />
   </ItemGroup>
 

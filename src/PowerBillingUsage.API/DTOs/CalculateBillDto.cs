@@ -1,4 +1,4 @@
-﻿using PowerBillingUsage.Core.Enums;
+﻿using PowerBillingUsage.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace PowerBillingUsage.API.DTOs;

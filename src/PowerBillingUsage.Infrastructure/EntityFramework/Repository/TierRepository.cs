@@ -1,5 +1,4 @@
-﻿using PowerBillingUsage.Core.IRepository;
-using PowerBillingUsage.Core.Models;
+﻿using PowerBillingUsage.Domain.Tiers;
 
 namespace PowerBillingUsage.Infrastructure.EntityFramework.Repository;
 

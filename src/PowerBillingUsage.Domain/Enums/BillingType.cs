@@ -1,7 +1,7 @@
-﻿using PowerBillingUsage.Core.Configurations;
-using PowerBillingUsage.Core.Models;
+﻿using PowerBillingUsage.Domain.Tiers;
+using PowerBillingUsage.Domain.Tiers.Configurations;
 
-namespace PowerBillingUsage.Core.Enums;
+namespace PowerBillingUsage.Domain.Enums;
 
 //public enum BillingType { Residential, Commercial }
 

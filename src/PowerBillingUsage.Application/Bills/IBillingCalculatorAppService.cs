@@ -1,6 +1,6 @@
-﻿using PowerBillingUsage.Core.Models;
+﻿using PowerBillingUsage.Domain.Bills;
 
-namespace PowerBillingUsage.Core.ApplicationContracts;
+namespace PowerBillingUsage.Application.Bills;
 
 public interface IBillingCalculatorAppService
 {

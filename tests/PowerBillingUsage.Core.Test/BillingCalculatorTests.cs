@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using PowerBillingUsage.Core.AppServices;
-using PowerBillingUsage.Core.Enums;
-using PowerBillingUsage.Core.Models;
+using PowerBillingUsage.Application.Bills;
+using PowerBillingUsage.Domain.Bills;
+using PowerBillingUsage.Domain.Enums;
 using PowerBillingUsage.Infrastructure.EntityFramework;
 using PowerBillingUsage.Infrastructure.EntityFramework.Repository;
 
