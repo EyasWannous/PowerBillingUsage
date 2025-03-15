@@ -1,10 +1,9 @@
-﻿using PowerBillingUsage.Core.ApplicationContracts;
-using PowerBillingUsage.Core.Enums;
-using PowerBillingUsage.Core.Extensions;
-using PowerBillingUsage.Core.IRepository;
-using PowerBillingUsage.Core.Models;
+﻿using PowerBillingUsage.Application.Extensions;
+using PowerBillingUsage.Domain.Bills;
+using PowerBillingUsage.Domain.Enums;
+using PowerBillingUsage.Domain.Tiers;
 
-namespace PowerBillingUsage.Core.AppServices;
+namespace PowerBillingUsage.Application.Bills;
 
 public class BillingCalculatorAppService : IBillingCalculatorAppService
 {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PowerBillingUsage.Core.IRepository;
-using PowerBillingUsage.Core.Models;
+using PowerBillingUsage.Domain.Abstractions;
 
 namespace PowerBillingUsage.Infrastructure.EntityFramework.Repository;
 

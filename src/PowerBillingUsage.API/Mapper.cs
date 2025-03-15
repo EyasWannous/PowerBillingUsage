@@ -1,5 +1,5 @@
 ﻿using PowerBillingUsage.API.DTOs;
-using PowerBillingUsage.Core.Models;
+using PowerBillingUsage.Domain.Bills;
 
 namespace PowerBillingUsage.API;
 

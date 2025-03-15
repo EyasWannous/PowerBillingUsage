@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PowerBillingUsage.API.DTOs;
-using PowerBillingUsage.Core.ApplicationContracts;
-using PowerBillingUsage.Core.Enums;
+using PowerBillingUsage.Application.Bills;
+using PowerBillingUsage.Domain.Enums;
 
 namespace PowerBillingUsage.API.Controllers;
 

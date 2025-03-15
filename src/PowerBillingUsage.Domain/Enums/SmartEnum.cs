@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace PowerBillingUsage.Core.Enums;
+namespace PowerBillingUsage.Domain.Enums;
 
 public abstract class SmartEnum<TEnum, TValue> where TEnum : SmartEnum<TEnum, TValue> where TValue : notnull
 {

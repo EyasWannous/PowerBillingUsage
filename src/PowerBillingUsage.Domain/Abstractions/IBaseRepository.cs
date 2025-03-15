@@ -1,6 +1,4 @@
-﻿using PowerBillingUsage.Core.Models;
-
-namespace PowerBillingUsage.Core.IRepository;
+﻿namespace PowerBillingUsage.Domain.Abstractions;
 
 public interface IBaseRepository<Entity, EntityId> : IDisposable
     where Entity : class, IEntity<EntityId>

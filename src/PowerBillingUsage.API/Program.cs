@@ -1,11 +1,11 @@
-using PowerBillingUsage.Core.IRepository;
 using PowerBillingUsage.Infrastructure.EntityFramework.Repository;
 using PowerBillingUsage.Infrastructure.EntityFramework;
-using PowerBillingUsage.Core.ApplicationContracts;
 using Microsoft.EntityFrameworkCore;
-using PowerBillingUsage.Core.AppServices;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
+using PowerBillingUsage.Domain.Bills;
+using PowerBillingUsage.Domain.Tiers;
+using PowerBillingUsage.Application.Bills;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,20 +18,20 @@ builder.Services.AddDbContext<PowerBillingUsageDbContext>(options =>
     options.UseInMemoryDatabase("PowerBillingUsageDb")
 );
 
-//builder.Services.AddRateLimiter(options =>
-//{
-//    options.AddPolicy("FixedWindow", context =>
-//        RateLimitPartition.GetFixedWindowLimiter(
-//            partitionKey: context.Request.Path,
-//            factory: _ => new FixedWindowRateLimiterOptions
-//            {
-//                AutoReplenishment = true,
-//                PermitLimit = 10,
-//                Window = TimeSpan.FromSeconds(10)
-//            }
-//        )
-//    );
-//});
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("FixedWindow", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Request.Path,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 10,
+                Window = TimeSpan.FromSeconds(10)
+            }
+        )
+    );
+});
 
 builder.Services.AddRateLimiter(options =>
 {

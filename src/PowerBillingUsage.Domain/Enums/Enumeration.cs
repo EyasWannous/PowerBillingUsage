@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace PowerBillingUsage.Core.Enums;
+namespace PowerBillingUsage.Domain.Enums;
 
 public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
     where TEnum : Enumeration<TEnum>

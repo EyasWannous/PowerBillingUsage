@@ -1,4 +1,6 @@
-﻿namespace PowerBillingUsage.Core.Models;
+﻿using PowerBillingUsage.Domain.Abstractions;
+
+namespace PowerBillingUsage.Domain.Tiers;
 
 public class Tier : IEntity<TierId>
 {
