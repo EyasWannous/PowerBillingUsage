@@ -16,10 +16,15 @@
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.1.0" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.1.0" />
     <PackageReference Include="Aspire.Hosting.Redis" Version="9.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PowerBillingUsage.API\PowerBillingUsage.API.csproj" />
+    <ProjectReference Include="..\PowerBillingUsage.DbMigrator\PowerBillingUsage.DbMigrator.csproj" />
     <ProjectReference Include="..\PowerBillingUsage.Web\PowerBillingUsage.Web.csproj" />
   </ItemGroup>
 
