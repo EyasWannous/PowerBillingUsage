@@ -3,7 +3,7 @@ using PowerBillingUsage.Domain.Abstractions;
 
 namespace PowerBillingUsage.Infrastructure.EntityFramework.Repository;
 
-public class BaseRepository<Entity, EntityId> : IBaseRepository<Entity, EntityId> , IDisposable
+public class BaseRepository<Entity, EntityId> : IBaseRepository<Entity, EntityId>, IDisposable
     where Entity : class, IEntity<EntityId>
     where EntityId : IEntityId
 {

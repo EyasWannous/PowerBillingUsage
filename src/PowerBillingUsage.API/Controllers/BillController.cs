@@ -44,7 +44,7 @@ public class BillController : ControllerBase
 
             return Ok(commercialBill.MapBill());
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }

@@ -1,6 +1,6 @@
-﻿using PowerBillingUsage.Web.Requests;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using PowerBillingUsage.Web.Models;
+using PowerBillingUsage.Web.Requests;
 using PowerBillingUsage.Web.Services;
 
 namespace PowerBillingUsage.Web.Pages;
@@ -19,7 +19,7 @@ public partial class Home
         isLoading = true;
         try
         {
-            if(_billingService is null)
+            if (_billingService is null)
                 throw new ArgumentNullException(nameof(_billingService));
 
             bill = await _billingService.CalculateBillAsync(billingRequest);

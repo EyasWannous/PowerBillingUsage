@@ -17,12 +17,12 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService
     {
         if (startAt > endAt)
             throw new ArgumentException("The start date must not be after the end date.", nameof(startAt));
-        
+
         if (consumptionInKWh is 0)
             return new Bill(new BillId(Guid.NewGuid()), BillingType.Commercial.Value, startAt, endAt, []);
 
         var breakDowns = await CalculateBreakdownsAsync(consumptionInKWh, BillingType.Commercial.Tiers);
-        
+
         var bill = new Bill(
             new BillId(Guid.NewGuid()),
             BillingType.Commercial.Value,
