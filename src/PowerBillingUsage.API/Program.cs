@@ -1,8 +1,8 @@
-using PowerBillingUsage.Infrastructure.EntityFramework.Repository;
-using PowerBillingUsage.Infrastructure.EntityFramework;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.RateLimiting;
+using PowerBillingUsage.Infrastructure.EntityFramework;
+using PowerBillingUsage.Infrastructure.EntityFramework.Repository;
 using PowerBillingUsage.Domain.Bills;
 using PowerBillingUsage.Domain.Tiers;
 using PowerBillingUsage.Application.Bills;
@@ -12,10 +12,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+//builder.Services.AddOpenApi();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+//Host=localhost;Port=xxxxx;Username=xxxxxxxx;Password=xxxxxxxxxxxxxxxxxxx;Database=postgresdb
+Console.WriteLine(builder.Configuration.GetConnectionString("postgresdb"));
 
 builder.Services.AddDbContext<PowerBillingUsageDbContext>(options =>
-    options.UseInMemoryDatabase("PowerBillingUsageDb")
+    options.UseNpgsql(builder.Configuration.GetConnectionString("postgresdb"))
 );
 
 builder.Services.AddRateLimiter(options =>
@@ -70,7 +76,9 @@ app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    //app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseCors("AllowAll");
