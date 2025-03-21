@@ -17,7 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Host=localhost;Port=xxxxx;Username=postgres;Password=tU2!Arrv}Px7hua4Dq{6)q;Database=postgresdb
+//Host=localhost;Port=xxxxx;Username=xxxxxxxx;Password=xxxxxxxxxxxxxxxxxxx;Database=postgresdb
 Console.WriteLine(builder.Configuration.GetConnectionString("postgresdb"));
 
 builder.Services.AddDbContext<PowerBillingUsageDbContext>(options =>
