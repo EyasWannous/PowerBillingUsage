@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 using PowerBillingUsage.API.DTOs;
 using PowerBillingUsage.Application.Bills;
 using PowerBillingUsage.Domain.Enums;
+using PowerBillingUsage.Infrastructure.EntityFramework;
 
 namespace PowerBillingUsage.API.Controllers;
 
@@ -10,10 +13,12 @@ namespace PowerBillingUsage.API.Controllers;
 public class BillController : ControllerBase
 {
     private readonly IBillingCalculatorAppService _billingCalculatorAppService;
+    protected IServiceProvider _serviceProvider;
 
-    public BillController(IBillingCalculatorAppService billingCalculatorAppService)
+    public BillController(IBillingCalculatorAppService billingCalculatorAppService, IServiceProvider serviceProvider)
     {
         _billingCalculatorAppService = billingCalculatorAppService;
+        _serviceProvider = serviceProvider;
     }
 
     [HttpPost]
@@ -44,5 +49,13 @@ public class BillController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Test()
+    {
+        var context = _serviceProvider.GetRequiredService<PowerBillingUsageDbContext>();
+
+        return Ok(await context.Bills.ToListAsync());
     }
 }

@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBillingUsage.Domain", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBillingUsage.Application", "src\PowerBillingUsage.Application\PowerBillingUsage.Application.csproj", "{97973927-6ABA-4A45-9BEE-4A7AB34A5612}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerBillingUsage.DbMigrator", "src\PowerBillingUsage.DbMigrator\PowerBillingUsage.DbMigrator.csproj", "{896C9E18-AAEC-46F3-8BC6-08157819A4F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{97973927-6ABA-4A45-9BEE-4A7AB34A5612}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97973927-6ABA-4A45-9BEE-4A7AB34A5612}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97973927-6ABA-4A45-9BEE-4A7AB34A5612}.Release|Any CPU.Build.0 = Release|Any CPU
+		{896C9E18-AAEC-46F3-8BC6-08157819A4F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{896C9E18-AAEC-46F3-8BC6-08157819A4F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{896C9E18-AAEC-46F3-8BC6-08157819A4F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{896C9E18-AAEC-46F3-8BC6-08157819A4F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,5 +80,6 @@ Global
 		{34CEF301-BDF1-425F-AF73-81668B73C497} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
 		{A7743F2F-60E6-4876-864E-8F5ED3B3DED7} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
 		{97973927-6ABA-4A45-9BEE-4A7AB34A5612} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
+		{896C9E18-AAEC-46F3-8BC6-08157819A4F1} = {52C051F5-D931-4C65-8780-A30BD8EB3E2C}
 	EndGlobalSection
 EndGlobal
