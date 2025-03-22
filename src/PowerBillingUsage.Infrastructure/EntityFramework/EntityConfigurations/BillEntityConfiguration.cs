@@ -12,7 +12,7 @@ internal class BillEntityConfiguration : IEntityTypeConfiguration<Bill>
 
         builder.Property(x => x.Id)
             .HasConversion(
-                billId => billId.Id,
+                billId => billId.Value,
                 guid => new BillId(guid)
             )
             .IsRequired();

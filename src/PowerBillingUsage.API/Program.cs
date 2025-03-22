@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using PowerBillingUsage.Application.Bills;
+using PowerBillingUsage.Domain.Abstractions;
 using PowerBillingUsage.Domain.Bills;
 using PowerBillingUsage.Domain.Tiers;
 using PowerBillingUsage.Infrastructure.EntityFramework;
 using PowerBillingUsage.Infrastructure.EntityFramework.Repository;
+using PowerBillingUsage.Infrastructure.Services;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +25,15 @@ Console.WriteLine(builder.Configuration.GetConnectionString("postgresdb"));
 builder.Services.AddDbContext<PowerBillingUsageDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("postgresdb"))
 );
+
+//builder.AddRedisDistributedCache("garnetcache");
+builder.AddRedisDistributedCache("rediscache");
+
+builder.Services.AddScoped<ICacheService, CacheService>();
+builder.Services.AddScoped<IBillRepository, BillRepository>();
+builder.Services.AddScoped<IBillDetailRepository, BillDetailRepository>();
+builder.Services.AddScoped<ITierRepository, TierRepository>();
+builder.Services.AddScoped<IBillingCalculatorAppService, BillingCalculatorAppService>();
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -51,11 +62,6 @@ builder.Services.AddRateLimiter(options =>
         opt.QueueLimit = 2;
     });
 });
-
-builder.Services.AddScoped<IBillRepository, BillRepository>();
-builder.Services.AddScoped<IBillDetailRepository, BillDetailRepository>();
-builder.Services.AddScoped<ITierRepository, TierRepository>();
-builder.Services.AddScoped<IBillingCalculatorAppService, BillingCalculatorAppService>();
 
 builder.Services.AddCors(options =>
 {

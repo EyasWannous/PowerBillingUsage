@@ -2,4 +2,4 @@
 
 namespace PowerBillingUsage.Domain.Tiers;
 
-public record TierId(Guid Id) : IEntityId;
+public record TierId(Guid Value) : IEntityId;

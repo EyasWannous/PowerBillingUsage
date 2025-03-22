@@ -2,4 +2,4 @@
 
 namespace PowerBillingUsage.Domain.Bills;
 
-public record BillDetailId(Guid Id) : IEntityId;
+public record BillDetailId(Guid Value) : IEntityId;
