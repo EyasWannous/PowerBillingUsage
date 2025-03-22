@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using PowerBillingUsage.Application.Bills;
+using PowerBillingUsage.Domain.Abstractions;
 using PowerBillingUsage.Domain.Bills;
 using PowerBillingUsage.Domain.Enums;
 using PowerBillingUsage.Infrastructure.EntityFramework;
@@ -15,6 +17,7 @@ public class BillingCalculatorTests
 
     private readonly PowerBillingUsageDbContext _context;
     private readonly BillingCalculatorAppService _billingCalculatorAppService;
+    private readonly ICacheService _cacheService;
 
     public static IEnumerable<object[]> GetValidatedResidentialBillingData =>
     [
@@ -149,7 +152,9 @@ public class BillingCalculatorTests
 
         _context = new PowerBillingUsageDbContext(options);
 
-        _billingCalculatorAppService = new BillingCalculatorAppService(new BillRepository(_context));
+        _cacheService = Mock.Of<ICacheService>();
+
+        _billingCalculatorAppService = new BillingCalculatorAppService(new BillRepository(_context, _cacheService));
     }
 
     internal void Dispose()
@@ -209,8 +214,8 @@ public class BillingCalculatorTests
 
         result.Id.Should().NotBe(expected.Id);
         result.BillingTypeValue.Should().Be(expected.BillingTypeValue);
-        result.StartAt.Should().Be(expected.StartAt);
-        result.EndAt.Should().Be(expected.EndAt);
+        result.StartAt.Should().Be(expected.StartAt.ToUniversalTime());
+        result.EndAt.Should().Be(expected.EndAt.ToUniversalTime());
 
         result.BreakDowns.Should().HaveCount(expected.BreakDowns.Count);
         for (int i = 0; i < result.BreakDowns.Count; i++)
@@ -231,8 +236,8 @@ public class BillingCalculatorTests
 
         result.Id.Should().NotBe(expected.Id);
         result.BillingTypeValue.Should().Be(expected.BillingTypeValue);
-        result.StartAt.Should().Be(expected.StartAt);
-        result.EndAt.Should().Be(expected.EndAt);
+        result.StartAt.Should().Be(expected.StartAt.ToUniversalTime());
+        result.EndAt.Should().Be(expected.EndAt.ToUniversalTime());
 
         result.BreakDowns.Should().HaveCount(expected.BreakDowns.Count);
         for (int i = 0; i < result.BreakDowns.Count; i++)

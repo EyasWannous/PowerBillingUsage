@@ -13,7 +13,7 @@ internal class TierEntityConfiguration : IEntityTypeConfiguration<Tier>
 
         builder.Property(x => x.Id)
             .HasConversion(
-                tierId => tierId.Id,
+                tierId => tierId.Value,
                 guid => new TierId(guid)
             )
             .IsRequired();
@@ -24,7 +24,7 @@ internal class TierEntityConfiguration : IEntityTypeConfiguration<Tier>
             .Concat(BillingConfiguration.CommercialTiers)
             .Select(t => new
             {
-                Id = new TierId(t.Id.Id),
+                Id = new TierId(t.Id.Value),
                 t.Name,
                 t.UpperLimitInKWh,
                 t.Rate,

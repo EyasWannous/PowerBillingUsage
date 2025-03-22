@@ -19,7 +19,13 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService
             throw new ArgumentException("The start date must not be after the end date.", nameof(startAt));
 
         if (consumptionInKWh is 0)
-            return new Bill(new BillId(Guid.NewGuid()), BillingType.Commercial.Value, startAt, endAt, []);
+            return new Bill(
+                new BillId(Guid.NewGuid()),
+                BillingType.Commercial.Value,
+                startAt.ToUniversalTime(),
+                endAt.ToUniversalTime(),
+                []
+            );
 
         var breakDowns = await CalculateBreakdownsAsync(consumptionInKWh, BillingType.Commercial.Tiers);
 
@@ -44,7 +50,13 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService
             throw new ArgumentException("The start date must not be after the end date.", nameof(startAt));
 
         if (consumptionInKWh is 0)
-            return new Bill(new BillId(Guid.NewGuid()), BillingType.Residential.Value, startAt, endAt, []);
+            return new Bill(
+                new BillId(Guid.NewGuid()),
+                BillingType.Residential.Value,
+                startAt.ToUniversalTime(),
+                endAt.ToUniversalTime(),
+                []
+            );
 
         var breakDowns = await CalculateBreakdownsAsync(consumptionInKWh, BillingType.Residential.Tiers);
         var bill = new Bill(

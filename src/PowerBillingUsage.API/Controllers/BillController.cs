@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PowerBillingUsage.API.DTOs;
 using PowerBillingUsage.Application.Bills;
+using PowerBillingUsage.Domain.Abstractions;
 using PowerBillingUsage.Domain.Enums;
 using PowerBillingUsage.Infrastructure.EntityFramework;
 
@@ -56,5 +57,15 @@ public class BillController : ControllerBase
         var context = _serviceProvider.GetRequiredService<PowerBillingUsageDbContext>();
 
         return Ok(await context.Bills.Include(x => x.BreakDowns).ToListAsync());
+    }
+
+    [HttpGet("cache")]
+    public async Task<IActionResult> TestCache()
+    {
+        var cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+
+        await cacheService.SetAsync(nameof(TestCache), 10);
+
+        return Ok();
     }
 }
