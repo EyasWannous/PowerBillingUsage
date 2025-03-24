@@ -1,8 +1,10 @@
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using PowerBillingUsage.API;
 using PowerBillingUsage.Application.Bills;
 using PowerBillingUsage.Domain.Abstractions;
 using PowerBillingUsage.Domain.Bills;
@@ -83,6 +85,9 @@ builder.Services.AddHealthChecks()
     .AddRedis(builder.Configuration.GetConnectionString("rediscache")!)
     .AddDbContextCheck<PowerBillingUsageDbContext>();
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 app.UseRateLimiter();
@@ -108,5 +113,7 @@ app.MapHealthChecks("health/check", new HealthCheckOptions
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseExceptionHandler();
 
 app.Run();
