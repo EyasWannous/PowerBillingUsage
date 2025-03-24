@@ -1,11 +1,15 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using PowerBillingUsage.Application.Bills;
 using PowerBillingUsage.Domain.Abstractions;
 using PowerBillingUsage.Domain.Bills;
 using PowerBillingUsage.Domain.Tiers;
 using PowerBillingUsage.Infrastructure.EntityFramework;
 using PowerBillingUsage.Infrastructure.EntityFramework.Repository;
+using PowerBillingUsage.Infrastructure.Health;
 using PowerBillingUsage.Infrastructure.Services;
 using System.Threading.RateLimiting;
 
@@ -73,6 +77,11 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddHealthChecks()
+    .AddCheck<DatabaseHealthCheck>("custom-sql", HealthStatus.Unhealthy)
+    .AddNpgSql(builder.Configuration.GetConnectionString("postgresdb")!)
+    .AddRedis(builder.Configuration.GetConnectionString("rediscache")!)
+    .AddDbContextCheck<PowerBillingUsageDbContext>();
 
 var app = builder.Build();
 
@@ -90,6 +99,11 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
+
+app.MapHealthChecks("health/check", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.UseAuthorization();
 
