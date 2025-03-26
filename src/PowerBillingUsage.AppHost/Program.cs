@@ -1,18 +1,12 @@
 using Aspirant.Hosting;
+using Aspire.Hosting.Lifecycle;
+using PowerBillingUsage.AppHost;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-const string PowerBillingUsage_DbMigrator = "powerbillingusage-dbmigrator";
-const string PowerBillingUsage_API_Name = "powerbillingusage-api";
-const string PowerBillingUsage_Web_Name = "powerbillingusage-blazor";
-//const string garnetCache = "garnetcache";
-const string redisCache = "rediscache";
-const string postgres = "postgres";
-const string postgresDb = "postgresdb";
-const string adminPostgresDb = "admin-postgresdb";
-const string yarp = "ingress";
+builder.Services.AddLifecycleHook<LifecycleLogger>();
 
-var powerBillingUsagePostgres = builder.AddPostgres(postgres)
+var powerBillingUsagePostgres = builder.AddPostgres(Constant.Postgres)
     .WithImage("postgres")
     .WithImageTag("latest")
     //.WithPgAdmin()
@@ -20,10 +14,10 @@ var powerBillingUsagePostgres = builder.AddPostgres(postgres)
     .WithLifetime(ContainerLifetime.Session)
     ;
 
-var postgresdb = powerBillingUsagePostgres.AddDatabase(postgresDb);
-//var postgresAdmindb = powerBillingUsagePostgres.AddDatabase(adminPostgresDb);
+var postgresdb = powerBillingUsagePostgres.AddDatabase(Constant.PostgresDb);
+//var postgresAdmindb = powerBillingUsagePostgres.AddDatabase(Constant.AdminPostgresDb);
 
-//var garnet = builder.AddGarnet(garnetCache)
+//var garnet = builder.AddGarnet(Constant.GarnetCache)
 //    .WithImage("ghcr.io/microsoft/garnet")
 //    .WithImageTag("latest")
 //    //.WithArgs("--lua-transaction-mode")
@@ -31,19 +25,19 @@ var postgresdb = powerBillingUsagePostgres.AddDatabase(postgresDb);
 //    .WithLifetime(ContainerLifetime.Session)
 //    ;
 
-var redis = builder.AddRedis(redisCache)
+var redis = builder.AddRedis(Constant.RedisCache)
     .WithImage("redis")
     .WithImageTag("latest")
     .WithEndpoint(name: "redis-tcp", port: 6379, targetPort: 6379)
     .WithLifetime(ContainerLifetime.Session)
     ;
 
-var migration = builder.AddProject<Projects.PowerBillingUsage_DbMigrator>(PowerBillingUsage_DbMigrator)
+var migration = builder.AddProject<Projects.PowerBillingUsage_DbMigrator>(Constant.PowerBillingUsage_DbMigrator)
     .WithReference(postgresdb)
     .WaitFor(postgresdb, WaitBehavior.WaitOnResourceUnavailable)
     ;
 
-var powerBillingUsageApi = builder.AddProject<Projects.PowerBillingUsage_API>(PowerBillingUsage_API_Name)
+var powerBillingUsageApi = builder.AddProject<Projects.PowerBillingUsage_API>(Constant.PowerBillingUsage_API_Name)
     .WithExternalHttpEndpoints()
     .WithReference(postgresdb)
     //.WithReference(postgresAdmindb)
@@ -53,13 +47,13 @@ var powerBillingUsageApi = builder.AddProject<Projects.PowerBillingUsage_API>(Po
     .WaitForCompletion(migration)
     ;
 
-var powerBillingUsage_Web = builder.AddProject<Projects.PowerBillingUsage_Web>(PowerBillingUsage_Web_Name)
+var powerBillingUsage_Web = builder.AddProject<Projects.PowerBillingUsage_Web>(Constant.PowerBillingUsage_Web_Name)
     .WithReference(powerBillingUsageApi)
     .WithReference(redis)
     .WaitFor(powerBillingUsageApi, WaitBehavior.WaitOnResourceUnavailable)
     ;
 
-var powerBillingUsageYarp = builder.AddYarp(yarp)
+var powerBillingUsageYarp = builder.AddYarp(Constant.Yarp)
     .WithHttpsEndpoint(port: 8001, targetPort: 7046)
     .WithReference(powerBillingUsageApi)
     .LoadFromConfiguration("ReverseProxy")
