@@ -1,4 +1,4 @@
-﻿using PowerBillingUsage.API.DTOs;
+﻿using PowerBillingUsage.API.Bills.DTOs;
 using PowerBillingUsage.Domain.Bills;
 
 namespace PowerBillingUsage.API;

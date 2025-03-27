@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 
 namespace PowerBillingUsage.Infrastructure.Services;
 
-public class CacheService : ICacheService
+public class CacheService : ICacheService, IScopedDependency
 {
     private static readonly ConcurrentDictionary<string, bool> _cachekeys = new();
 

@@ -1,5 +1,4 @@
 ﻿using PowerBillingUsage.Domain.Tiers;
-using PowerBillingUsage.Domain.Tiers.Configurations;
 
 namespace PowerBillingUsage.Domain.Enums;
 

@@ -2,7 +2,7 @@
 
 namespace PowerBillingUsage.Domain.Abstractions;
 
-public interface IBaseRepository<Entity, EntityId> : IDisposable
+public interface IRepository<Entity, EntityId> : IDisposable
     where Entity : class, IEntity<EntityId>
     where EntityId : IEntityId
 {
