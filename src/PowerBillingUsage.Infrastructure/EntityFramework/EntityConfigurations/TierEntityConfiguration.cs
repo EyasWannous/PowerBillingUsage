@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PowerBillingUsage.Domain.Tiers;
-using PowerBillingUsage.Domain.Tiers.Configurations;
 
 namespace PowerBillingUsage.Infrastructure.EntityFramework.EntityConfigurations;
 

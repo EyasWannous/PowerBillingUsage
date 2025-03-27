@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PowerBillingUsage.API.DTOs;
+using PowerBillingUsage.API.Bills.DTOs;
 using PowerBillingUsage.Application.Bills;
 using PowerBillingUsage.Domain.Abstractions;
 using PowerBillingUsage.Domain.Enums;
 using PowerBillingUsage.Infrastructure.EntityFramework;
 
-namespace PowerBillingUsage.API.Controllers;
+namespace PowerBillingUsage.API.Bills;
 
 [ApiController]
 [Route("api/[Controller]")]

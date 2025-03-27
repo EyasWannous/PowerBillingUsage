@@ -1,14 +1,15 @@
-﻿using PowerBillingUsage.Domain.Bills;
+﻿using PowerBillingUsage.Domain.Abstractions;
+using PowerBillingUsage.Domain.Bills;
 using PowerBillingUsage.Domain.Enums;
 using PowerBillingUsage.Domain.Tiers;
 
 namespace PowerBillingUsage.Application.Bills;
 
-public class BillingCalculatorAppService : IBillingCalculatorAppService
+public class BillingCalculatorAppService : IBillingCalculatorAppService, IScopedDependency
 {
-    private readonly IBillRepository _billRepository;
+    private readonly IRepository<Bill, BillId> _billRepository;
 
-    public BillingCalculatorAppService(IBillRepository billRepository)
+    public BillingCalculatorAppService(IRepository<Bill, BillId> billRepository)
     {
         _billRepository = billRepository;
     }

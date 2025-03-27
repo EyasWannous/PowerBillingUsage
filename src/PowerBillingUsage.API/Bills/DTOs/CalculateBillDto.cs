@@ -1,7 +1,7 @@
 ﻿using PowerBillingUsage.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace PowerBillingUsage.API.DTOs;
+namespace PowerBillingUsage.API.Bills.DTOs;
 
 public class CalculateBillDto
 {
