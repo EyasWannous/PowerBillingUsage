@@ -154,7 +154,7 @@ public class BillingCalculatorTests
 
         _cacheService = Mock.Of<ICacheService>();
 
-        _billingCalculatorAppService = new BillingCalculatorAppService(new BillRepository(_context, _cacheService));
+        _billingCalculatorAppService = new BillingCalculatorAppService(new Repository<Bill, BillId>(_context, _cacheService));
     }
 
     internal void Dispose()

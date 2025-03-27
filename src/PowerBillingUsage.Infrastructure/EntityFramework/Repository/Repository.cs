@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PowerBillingUsage.Domain.Abstractions;
-using System;
 using System.Linq.Expressions;
 
 namespace PowerBillingUsage.Infrastructure.EntityFramework.Repository;
 
-public class BaseRepository<Entity, EntityId> : IBaseRepository<Entity, EntityId>, IDisposable
+public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScopedDependency, IDisposable
     where Entity : class, IEntity<EntityId>
     where EntityId : IEntityId
 {
@@ -16,7 +15,7 @@ public class BaseRepository<Entity, EntityId> : IBaseRepository<Entity, EntityId
     protected readonly string KeyOne = $"oneOf_{typeof(Entity)}_Id: ";
     protected readonly string CountKey = $"count_{typeof(Entity)}";
 
-    public BaseRepository(PowerBillingUsageDbContext context, ICacheService cacheService)
+    public Repository(PowerBillingUsageDbContext context, ICacheService cacheService)
     {
         Context = context;
         CacheService = cacheService;

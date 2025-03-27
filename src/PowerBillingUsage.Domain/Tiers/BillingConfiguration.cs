@@ -1,4 +1,4 @@
-﻿namespace PowerBillingUsage.Domain.Tiers.Configurations;
+﻿namespace PowerBillingUsage.Domain.Tiers;
 
 public class BillingConfiguration
 {
