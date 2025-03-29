@@ -6,5 +6,5 @@ namespace PowerBillingUsage.Application.Bills;
 
 public interface IBillingCalculatorAppService
 {
-    public Task<Result<Bill>> CalculateBillAsync(CalculateBillDto input, CancellationToken cancellationToken = default);
+    public Task<Result<BillDto>> CalculateBillAsync(CalculateBillDto input, CancellationToken cancellationToken = default);
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using PowerBillingUsage.API;
+using PowerBillingUsage.API.Bills;
 using PowerBillingUsage.API.Extemsions;
 using PowerBillingUsage.Infrastructure.EntityFramework;
 using PowerBillingUsage.Infrastructure.Health;
@@ -74,6 +75,8 @@ app.UseSerilogRequestLogging();
 
 app.UseCors("AllowAll");
 
+app.UseStatusCodePages();
+
 app.UseHttpsRedirection();
 
 app.MapHealthChecks("health/check", new HealthCheckOptions
@@ -84,6 +87,10 @@ app.MapHealthChecks("health/check", new HealthCheckOptions
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGroup("/api/v1/bills")
+   .WithTags("Bills EndPoints")
+   .MapBillEndPoints();
 
 app.UseExceptionHandler();
 

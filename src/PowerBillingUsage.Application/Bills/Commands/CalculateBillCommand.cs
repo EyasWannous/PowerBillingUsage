@@ -57,6 +57,6 @@ public static class BillErrors
     public static Error CalculationFailure(string? message = null) => Error.Failure(
         "Bills.CalculationFailure",
         $"Something Happen that make the bill calculation failed"
-        + message is not null ? $", and an error occurs with this message: {message}" : string.Empty
+        + (message is not null ? $", and an error occurs with this message: {message}" : string.Empty)
     );
 }

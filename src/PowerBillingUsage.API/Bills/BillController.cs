@@ -29,7 +29,7 @@ public class BillController : ControllerBase
         if (!response.IsSuccess)
             return BadRequest(response.Error);
 
-        return Ok(response.Value.MapBill());
+        return Ok(response.Value);
     }
 
     [HttpGet]
