@@ -20,7 +20,8 @@ public class ApplicationModule : AssemblyScanModule
             .Create(Assembly)
             .WithAllOpenGenericHandlerTypesRegistered()
             .WithRegistrationScope(RegistrationScope.Transient)
-            .WithCustomPipelineBehavior(typeof(LoggingPiplineBehavior<,>))
+            .WithCustomPipelineBehavior(typeof(LoggingPipelineBehavior<,>))
+            .WithCustomPipelineBehavior(typeof(QueryCachedPipelineBehavior<,>))
             .Build();
 
         //builder.RegisterGeneric(typeof(LoggingPiplineBehavior<,>))

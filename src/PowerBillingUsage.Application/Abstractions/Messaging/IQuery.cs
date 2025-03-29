@@ -1,5 +1,6 @@
-﻿namespace PowerBillingUsage.Application.Abstractions.Messaging;
+﻿using MediatR;
+using PowerBillingUsage.Domain.Abstractions.Shared;
 
-public interface IQuery<TResponse>
-{
-}
+namespace PowerBillingUsage.Application.Abstractions.Messaging;
+
+public interface IQuery<TResponse> : IRequest<Result<TResponse>>;

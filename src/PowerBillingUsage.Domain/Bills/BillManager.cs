@@ -14,7 +14,7 @@ public class BillManager : IScopedDependency
         _billRepository = billRepository;
     }
 
-    public async Task<Bill> CalculateCommercialBillAsync(int consumptionInKWh, DateTime startAt, DateTime endAt, CancellationToken cancellationToken = default)
+    public async Task<Bill> CalculateCommercialBillAsync(int consumptionInKWh, DateTime startAt, DateTime endAt, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         if (startAt > endAt)
             throw new ArgumentException("The start date must not be after the end date.", nameof(startAt));
@@ -38,14 +38,14 @@ public class BillManager : IScopedDependency
             breakDowns
         );
 
-        await _billRepository.InsertAsync(bill, cancellationToken);
+        await _billRepository.InsertAsync(bill, expiration, cancellationToken);
 
         await _billRepository.SaveChangesAsync(cancellationToken);
 
         return bill;
     }
 
-    public async Task<Bill> CalculateResidentialBillAsync(int consumptionInKWh, DateTime startAt, DateTime endAt, CancellationToken cancellationToken = default)
+    public async Task<Bill> CalculateResidentialBillAsync(int consumptionInKWh, DateTime startAt, DateTime endAt, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         if (startAt > endAt)
             throw new ArgumentException("The start date must not be after the end date.", nameof(startAt));
@@ -68,7 +68,7 @@ public class BillManager : IScopedDependency
             breakDowns
         );
 
-        await _billRepository.InsertAsync(bill, cancellationToken);
+        await _billRepository.InsertAsync(bill, expiration, cancellationToken);
 
         await _billRepository.SaveChangesAsync(cancellationToken);
 

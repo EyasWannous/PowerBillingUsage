@@ -5,7 +5,7 @@ using PowerBillingUsage.Domain.Enums;
 
 namespace PowerBillingUsage.Application.Bills.Commands;
 
-public record CalculateBillCommand(int ConsumptionInKWh, DateTime StartAt, DateTime EndAt, BillingType Type) : ICommand<Bill>
+public record CalculateBillCommand(int ConsumptionInKWh, DateTime StartAt, DateTime EndAt, BillingType Type, TimeSpan? expiration = null) : ICommand<Bill>
 {
 }
 
@@ -28,6 +28,7 @@ internal sealed class CalculateBillCommandHandler : ICommandHandler<CalculateBil
                     command.ConsumptionInKWh,
                     command.StartAt,
                     command.EndAt,
+                    command.expiration,
                     cancellationToken
                 );
 
@@ -38,6 +39,7 @@ internal sealed class CalculateBillCommandHandler : ICommandHandler<CalculateBil
                 command.ConsumptionInKWh,
                 command.StartAt,
                 command.EndAt,
+                command.expiration,
                 cancellationToken
             );
 
