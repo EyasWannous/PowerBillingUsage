@@ -1,12 +1,11 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using PowerBillingUsage.Application.Bills;
-using PowerBillingUsage.Domain.Abstractions;
+using PowerBillingUsage.Domain.Abstractions.Services;
 using PowerBillingUsage.Domain.Bills;
 using PowerBillingUsage.Domain.Enums;
 using PowerBillingUsage.Infrastructure.EntityFramework;
-using PowerBillingUsage.Infrastructure.EntityFramework.Repository;
+using PowerBillingUsage.Infrastructure.EntityFramework.Repositories;
 
 namespace PowerBillingUsage.Core.Test;
 
@@ -15,8 +14,8 @@ public class BillingCalculatorTests
     private static readonly DateTime DefaultStartDate = new(2025, 01, 01, 20, 10, 00);
     private static readonly DateTime DefaultEndDate = new(2025, 01, 31, 03, 15, 00);
 
-    private readonly PowerBillingUsageDbContext _context;
-    private readonly BillingCalculatorAppService _billingCalculatorAppService;
+    private readonly PowerBillingUsageWriteDbContext _context;
+    private readonly BillManager _billManager;
     private readonly ICacheService _cacheService;
 
     public static IEnumerable<object[]> GetValidatedResidentialBillingData =>
@@ -146,15 +145,15 @@ public class BillingCalculatorTests
 
     public BillingCalculatorTests()
     {
-        var options = new DbContextOptionsBuilder<PowerBillingUsageDbContext>()
+        var options = new DbContextOptionsBuilder<PowerBillingUsageWriteDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .Options;
 
-        _context = new PowerBillingUsageDbContext(options);
+        _context = new PowerBillingUsageWriteDbContext(options);
 
         _cacheService = Mock.Of<ICacheService>();
 
-        _billingCalculatorAppService = new BillingCalculatorAppService(new Repository<Bill, BillId>(_context, _cacheService));
+        _billManager = new BillManager(new Repository<Bill, BillId>(_context, _cacheService));
     }
 
     internal void Dispose()
@@ -166,7 +165,7 @@ public class BillingCalculatorTests
     [InlineData(-1)]
     public async Task CalculateResidentialConsumptionCost_ShouldThrowArgumentOutOfRangeExceptionForInvalidConsumption(int consumption)
     {
-        Func<Task> act = () => _billingCalculatorAppService.CalculateResidentialBillAsync(consumption, DefaultStartDate, DefaultEndDate);
+        Func<Task> act = () => _billManager.CalculateResidentialBillAsync(consumption, DefaultStartDate, DefaultEndDate);
 
         await act.Should().ThrowAsync<ArgumentOutOfRangeException>();
     }
@@ -175,7 +174,7 @@ public class BillingCalculatorTests
     [InlineData(-1)]
     public async Task CalculateCommercialConsumptionCost_ShouldThrowArgumentOutOfRangeExceptionForInvalidConsumption(int consumption)
     {
-        Func<Task> act = () => _billingCalculatorAppService.CalculateCommercialBillAsync(consumption, DefaultStartDate, DefaultEndDate);
+        Func<Task> act = () => _billManager.CalculateCommercialBillAsync(consumption, DefaultStartDate, DefaultEndDate);
 
         await act.Should().ThrowAsync<ArgumentOutOfRangeException>();
     }
@@ -187,7 +186,7 @@ public class BillingCalculatorTests
         var startDate = DateTime.Parse(startAt);
         var endDate = DateTime.Parse(endAt);
 
-        Func<Task> act = () => _billingCalculatorAppService.CalculateResidentialBillAsync(100, startDate, endDate);
+        Func<Task> act = () => _billManager.CalculateResidentialBillAsync(100, startDate, endDate);
 
         await act.Should().ThrowAsync<ArgumentException>()
             .WithMessage("The start date must not be after the end date.*");
@@ -200,7 +199,7 @@ public class BillingCalculatorTests
         var startDate = DateTime.Parse(startAt);
         var endDate = DateTime.Parse(endAt);
 
-        Func<Task> act = () => _billingCalculatorAppService.CalculateCommercialBillAsync(100, startDate, endDate);
+        Func<Task> act = () => _billManager.CalculateCommercialBillAsync(100, startDate, endDate);
 
         await act.Should().ThrowAsync<ArgumentException>()
             .WithMessage("The start date must not be after the end date.*");
@@ -210,7 +209,7 @@ public class BillingCalculatorTests
     [MemberData(nameof(GetValidatedResidentialBillingData))]
     public async Task CalculateResidentialConsumptionCost_ShouldReturnExpectedValue(int consumption, Bill expected)
     {
-        var result = await _billingCalculatorAppService.CalculateResidentialBillAsync(consumption, DefaultStartDate, DefaultEndDate);
+        var result = await _billManager.CalculateResidentialBillAsync(consumption, DefaultStartDate, DefaultEndDate);
 
         result.Id.Should().NotBe(expected.Id);
         result.BillingTypeValue.Should().Be(expected.BillingTypeValue);
@@ -232,7 +231,7 @@ public class BillingCalculatorTests
     [MemberData(nameof(GetValidatedCommercialBillingData))]
     public async Task CalculateCommercialConsumptionCost_ShouldReturnExpectedValue(int consumption, Bill expected)
     {
-        var result = await _billingCalculatorAppService.CalculateCommercialBillAsync(consumption, DefaultStartDate, DefaultEndDate);
+        var result = await _billManager.CalculateCommercialBillAsync(consumption, DefaultStartDate, DefaultEndDate);
 
         result.Id.Should().NotBe(expected.Id);
         result.BillingTypeValue.Should().Be(expected.BillingTypeValue);

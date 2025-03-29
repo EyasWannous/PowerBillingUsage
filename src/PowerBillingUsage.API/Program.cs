@@ -19,11 +19,16 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Host=localhost;Port=xxxxx;Username=xxxxxxxx;Password=xxxxxxxxxxxxxxxxxxx;Database=postgresdb
+// Host=localhost;Port=xxxxx;Username=xxxxxxxx;Password=xxxxxxxxxxxxxxxxxxx;Database=postgresdb
 Console.WriteLine(builder.Configuration.GetConnectionString("postgresdb"));
 
-builder.Services.AddDbContext<PowerBillingUsageDbContext>(options =>
+builder.Services.AddDbContext<PowerBillingUsageWriteDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("postgresdb"))
+);
+
+builder.Services.AddDbContext<PowerBillingUsageReadDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("postgresdb"))
+        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 );
 
 //builder.AddRedisDistributedCache("garnetcache");
@@ -40,7 +45,7 @@ builder.Services.AddHealthChecks()
     .AddCheck<DatabaseHealthCheck>("custom-sql", HealthStatus.Unhealthy)
     .AddNpgSql(builder.Configuration.GetConnectionString("postgresdb")!)
     .AddRedis(builder.Configuration.GetConnectionString("rediscache")!)
-    .AddDbContextCheck<PowerBillingUsageDbContext>();
+    .AddDbContextCheck<PowerBillingUsageWriteDbContext>();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();

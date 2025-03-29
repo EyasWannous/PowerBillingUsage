@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace PowerBillingUsage.Domain.Abstractions;
+namespace PowerBillingUsage.Domain.Abstractions.Repositories;
 
 public interface IRepository<Entity, EntityId> : IDisposable
     where Entity : class, IEntity<EntityId>
@@ -11,6 +11,7 @@ public interface IRepository<Entity, EntityId> : IDisposable
     Task DeleteAsync(EntityId id, CancellationToken cancellationToken = default);
     Task<Entity?> GetByIdAsync(EntityId id, CancellationToken cancellationToken = default);
     Task<IEnumerable<Entity>> GetlistAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<Entity>> GetPaginateAsync(int skip, int take, CancellationToken cancellationToken = default);
     Task<Entity> InsertAsync(Entity bill, CancellationToken cancellationToken = default);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task<Entity> UpdateAsync(Entity bill, CancellationToken cancellationToken = default);

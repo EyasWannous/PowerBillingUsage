@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PowerBillingUsage.Domain.Tiers;
 
-namespace PowerBillingUsage.Infrastructure.EntityFramework.EntityConfigurations;
+namespace PowerBillingUsage.Infrastructure.EntityFramework.EntityConfigurations.Write;
 
 internal class TierEntityConfiguration : IEntityTypeConfiguration<Tier>
 {

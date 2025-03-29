@@ -1,21 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PowerBillingUsage.Domain.Abstractions;
+using PowerBillingUsage.Domain.Abstractions.RegisteringDependencies;
+using PowerBillingUsage.Domain.Abstractions.Repositories;
+using PowerBillingUsage.Domain.Abstractions.Services;
 using System.Linq.Expressions;
 
-namespace PowerBillingUsage.Infrastructure.EntityFramework.Repository;
+namespace PowerBillingUsage.Infrastructure.EntityFramework.Repositories;
 
 public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScopedDependency, IDisposable
     where Entity : class, IEntity<EntityId>
     where EntityId : IEntityId
 {
-    protected readonly PowerBillingUsageDbContext Context;
+    protected readonly PowerBillingUsageWriteDbContext Context;
     protected readonly ICacheService CacheService;
     protected readonly string KeyAll = $"allOf_{typeof(Entity)}";
     protected readonly string PaginateKey = $"paginate_{typeof(Entity)}_";
     protected readonly string KeyOne = $"oneOf_{typeof(Entity)}_Id: ";
     protected readonly string CountKey = $"count_{typeof(Entity)}";
 
-    public Repository(PowerBillingUsageDbContext context, ICacheService cacheService)
+    public Repository(PowerBillingUsageWriteDbContext context, ICacheService cacheService)
     {
         Context = context;
         CacheService = cacheService;
@@ -136,12 +139,12 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
     public async Task<int> CountAsync(Expression<Func<Entity, bool>> criteria, CancellationToken cancellationToken = default)
         => await Context.Set<Entity>().CountAsync(criteria, cancellationToken);
 
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) 
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         => await Context.SaveChangesAsync(cancellationToken);
 
     private string MakeKeyOne(EntityId id) => KeyOne + id.Value.ToString();
 
-    private string MakePaginateKey(int skip, int take) 
+    private string MakePaginateKey(int skip, int take)
         => PaginateKey + "skip: " + skip + "_take: " + take;
 
     private async Task RemoveAllCacheWithoutCountAsync(string keyOne, CancellationToken cancellationToken = default)
@@ -159,7 +162,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
             return;
 
         await CacheService.RemoveAsync(CountKey, cancellationToken);
-        
+
         await CacheService.SetAsync(CountKey, count + value, cancellationToken);
     }
 
@@ -167,7 +170,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!this.disposed)
+        if (!disposed)
         {
             if (disposing)
             {
@@ -175,7 +178,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
             }
         }
 
-        this.disposed = true;
+        disposed = true;
     }
 
     public void Dispose()

@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using PowerBillingUsage.Domain;
-using PowerBillingUsage.Domain.Abstractions;
-using PowerBillingUsage.Infrastructure.EntityFramework.Repository;
+using PowerBillingUsage.Domain.Abstractions.Repositories;
+using PowerBillingUsage.Infrastructure.EntityFramework.Repositories;
 using System.Reflection;
 
 namespace PowerBillingUsage.Infrastructure;
@@ -15,6 +15,14 @@ public class InfrastructureModule : AssemblyScanModule
 
         builder.RegisterGeneric(typeof(Repository<,>))
             .As(typeof(IRepository<,>))
+            .InstancePerLifetimeScope();
+
+        builder.RegisterGeneric(typeof(ReadRepository<,>))
+            .As(typeof(IReadRepository<,>))
+            .InstancePerLifetimeScope();
+
+        builder.RegisterGeneric(typeof(WriteRepository<,>))
+            .As(typeof(IWriteRepository<,>))
             .InstancePerLifetimeScope();
     }
 }

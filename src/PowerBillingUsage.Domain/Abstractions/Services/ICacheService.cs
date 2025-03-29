@@ -1,4 +1,4 @@
-﻿namespace PowerBillingUsage.Domain.Abstractions;
+﻿namespace PowerBillingUsage.Domain.Abstractions.Services;
 
 public interface ICacheService
 {

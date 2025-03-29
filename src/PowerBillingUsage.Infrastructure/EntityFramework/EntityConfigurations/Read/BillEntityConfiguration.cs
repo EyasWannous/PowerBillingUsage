@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PowerBillingUsage.Domain.Bills;
 
-namespace PowerBillingUsage.Infrastructure.EntityFramework.EntityConfigurations;
+namespace PowerBillingUsage.Infrastructure.EntityFramework.EntityConfigurations.Read;
 
-internal class BillEntityConfiguration : IEntityTypeConfiguration<Bill>
+internal class BillReadModelEntityConfiguration : IEntityTypeConfiguration<BillReadModel>
 {
-    public void Configure(EntityTypeBuilder<Bill> builder)
+    public void Configure(EntityTypeBuilder<BillReadModel> builder)
     {
         builder.HasKey(x => x.Id);
 
