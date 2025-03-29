@@ -24,7 +24,7 @@ public class ReadRepository<ReadModel, EntityId> : IReadRepository<ReadModel, En
         CacheService = cacheService;
     }
 
-    public async Task<IEnumerable<ReadModel>> GetPaginateAsync(int skip, int take, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<ReadModel>> GetPaginateAsync(int skip, int take, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var paginateKey = MakePaginateKey(skip, take);
 
@@ -38,12 +38,12 @@ public class ReadRepository<ReadModel, EntityId> : IReadRepository<ReadModel, En
             .AsNoTracking()
             .ToListAsync(cancellationToken: cancellationToken);
 
-        await CacheService.SetAsync(paginateKey, items, cancellationToken);
+        await CacheService.SetAsync(paginateKey, items, expiration, cancellationToken);
 
         return items;
     }
 
-    public async Task<IEnumerable<ReadModel>> GetlistAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<ReadModel>> GetlistAsync(TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var items = await CacheService.GetAsync<IEnumerable<ReadModel>>(KeyAll, cancellationToken);
         if (items is not null)
@@ -53,12 +53,12 @@ public class ReadRepository<ReadModel, EntityId> : IReadRepository<ReadModel, En
             .AsNoTracking()
             .ToListAsync(cancellationToken: cancellationToken);
 
-        await CacheService.SetAsync(KeyAll, items, cancellationToken);
+        await CacheService.SetAsync(KeyAll, items, expiration, cancellationToken);
 
         return items;
     }
 
-    public async Task<ReadModel?> GetByIdAsync(EntityId id, CancellationToken cancellationToken = default)
+    public async Task<ReadModel?> GetByIdAsync(EntityId id, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var keyOne = MakeKeyOne(id);
 
@@ -70,12 +70,12 @@ public class ReadRepository<ReadModel, EntityId> : IReadRepository<ReadModel, En
         if (item is null)
             return null;
 
-        await CacheService.SetAsync(keyOne, item, cancellationToken);
+        await CacheService.SetAsync(keyOne, item, expiration, cancellationToken);
 
         return item;
     }
 
-    public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+    public async Task<int> CountAsync(TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var count = await CacheService.GetAsync<int>(CountKey, cancellationToken);
         if (count is not 0)
@@ -83,7 +83,7 @@ public class ReadRepository<ReadModel, EntityId> : IReadRepository<ReadModel, En
 
         count = await Context.Set<ReadModel>().CountAsync(cancellationToken);
 
-        await CacheService.SetAsync(CountKey, count, cancellationToken);
+        await CacheService.SetAsync(CountKey, count, expiration, cancellationToken);
 
         return count;
     }

@@ -4,13 +4,13 @@ using PowerBillingUsage.Domain.Abstractions.Shared;
 
 namespace PowerBillingUsage.Application.Behaviors;
 
-public class LoggingPiplineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public sealed class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : Result
 {
-    private readonly ILogger<LoggingPiplineBehavior<TRequest, TResponse>> _logger;
+    private readonly ILogger<LoggingPipelineBehavior<TRequest, TResponse>> _logger;
 
-    public LoggingPiplineBehavior(ILogger<LoggingPiplineBehavior<TRequest, TResponse>> logger)
+    public LoggingPipelineBehavior(ILogger<LoggingPipelineBehavior<TRequest, TResponse>> logger)
     {
         _logger = logger;
     }

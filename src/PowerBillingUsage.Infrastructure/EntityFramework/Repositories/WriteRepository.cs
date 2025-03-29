@@ -23,23 +23,23 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
         CacheService = cacheService;
     }
 
-    public async Task<Entity> InsertAsync(Entity item, CancellationToken cancellationToken = default)
+    public async Task<Entity> InsertAsync(Entity item, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         await Task.WhenAll(
             CacheService.RemoveAsync(KeyAll, cancellationToken),
             CacheService.RemoveByPrefixAsync(PaginateKey, cancellationToken),
-            UpdateCountCacheAsync(1, cancellationToken)
+            UpdateCountCacheAsync(1, expiration, cancellationToken)
         );
 
         await Context.Set<Entity>().AddAsync(item, cancellationToken);
         string keyOne = MakeKeyOne(item.Id);
 
-        await CacheService.SetAsync(keyOne, item, cancellationToken);
+        await CacheService.SetAsync(keyOne, item, expiration, cancellationToken);
 
         return item;
     }
 
-    public async Task DeleteAsync(EntityId id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(EntityId id, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var item = await Context.Set<Entity>().FirstOrDefaultAsync(x => x.Id.Value == id.Value, cancellationToken);
         if (item is null)
@@ -50,7 +50,7 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
         await Task.WhenAll(
             RemoveAllCacheWithoutCountAsync(keyOne, cancellationToken),
             CacheService.RemoveByPrefixAsync(PaginateKey, cancellationToken),
-            UpdateCountCacheAsync(-1, cancellationToken)
+            UpdateCountCacheAsync(-1, expiration, cancellationToken)
         );
 
         Context.Set<Entity>().Remove(item);
@@ -84,7 +84,7 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
         );
     }
 
-    private async Task UpdateCountCacheAsync(int value, CancellationToken cancellationToken)
+    private async Task UpdateCountCacheAsync(int value, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var count = await CacheService.GetAsync<int>(CountKey, cancellationToken);
         if (count is 0)
@@ -92,7 +92,7 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
 
         await CacheService.RemoveAsync(CountKey, cancellationToken);
 
-        await CacheService.SetAsync(CountKey, count + value, cancellationToken);
+        await CacheService.SetAsync(CountKey, count + value, expiration, cancellationToken);
     }
 
     private bool disposed = false;

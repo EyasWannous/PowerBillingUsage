@@ -28,7 +28,8 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService, IScoped
                 input.Consumption,
                 input.StartAt,
                 input.EndAt,
-                billingType
+                billingType,
+                null
             ),
             cancellationToken
         );

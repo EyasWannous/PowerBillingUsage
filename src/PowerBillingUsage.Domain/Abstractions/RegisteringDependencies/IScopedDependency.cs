@@ -1,5 +1,3 @@
 ﻿namespace PowerBillingUsage.Domain.Abstractions.RegisteringDependencies;
 
-public interface IScopedDependency
-{
-}
+public interface IScopedDependency;

@@ -8,6 +8,8 @@ namespace PowerBillingUsage.Infrastructure.Services;
 
 public class CacheService : ICacheService, IScopedDependency
 {
+    private static readonly TimeSpan _defualtExpiration = TimeSpan.FromMinutes(5);
+
     private static readonly ConcurrentDictionary<string, bool> _cachekeys = new();
 
     private readonly IDistributedCache _distributedCache;
@@ -30,15 +32,15 @@ public class CacheService : ICacheService, IScopedDependency
         return result;
     }
 
-    public async Task<T> GetAsync<T>(string key, Func<Task<T>> factory, CancellationToken cancellationToken = default)
+    public async Task<T> GetOrCreateAsync<T>(string key, Func<CancellationToken, Task<T>> factory, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         T? cacheItem = await GetAsync<T>(key, cancellationToken);
         if (cacheItem is not null)
             return cacheItem;
 
-        cacheItem = await factory();
+        cacheItem = await factory(cancellationToken);
 
-        await SetAsync(key, cacheItem, cancellationToken);
+        await SetAsync(key, cacheItem, expiration, cancellationToken);
 
         return cacheItem;
     }
@@ -59,13 +61,17 @@ public class CacheService : ICacheService, IScopedDependency
         await Task.WhenAll(tasks);
     }
 
-    public async Task SetAsync<T>(string key, T value, CancellationToken cancellationToken = default)
+    public async Task SetAsync<T>(string key, T value, TimeSpan? expirationTime = null, CancellationToken cancellationToken = default)
     {
         string cacheItem = JsonConvert.SerializeObject(value);
 
         await _distributedCache.SetStringAsync(
             key,
             cacheItem,
+            new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = expirationTime ?? _defualtExpiration
+            },
             cancellationToken
         );
 

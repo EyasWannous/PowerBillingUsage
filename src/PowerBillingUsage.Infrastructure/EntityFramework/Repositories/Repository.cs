@@ -24,7 +24,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
         CacheService = cacheService;
     }
 
-    public async Task<IEnumerable<Entity>> GetPaginateAsync(int skip, int take, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Entity>> GetPaginateAsync(int skip, int take, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var paginateKey = MakePaginateKey(skip, take);
 
@@ -38,12 +38,12 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
             .AsNoTracking()
             .ToListAsync(cancellationToken: cancellationToken);
 
-        await CacheService.SetAsync(paginateKey, items, cancellationToken);
+        await CacheService.SetAsync(paginateKey, items, expiration, cancellationToken);
 
         return items;
     }
 
-    public async Task<IEnumerable<Entity>> GetlistAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Entity>> GetlistAsync(TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var items = await CacheService.GetAsync<IEnumerable<Entity>>(KeyAll, cancellationToken);
         if (items is not null)
@@ -53,12 +53,12 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
             .AsNoTracking()
             .ToListAsync(cancellationToken: cancellationToken);
 
-        await CacheService.SetAsync(KeyAll, items, cancellationToken);
+        await CacheService.SetAsync(KeyAll, items, expiration, cancellationToken);
 
         return items;
     }
 
-    public async Task<Entity?> GetByIdAsync(EntityId id, CancellationToken cancellationToken = default)
+    public async Task<Entity?> GetByIdAsync(EntityId id, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var keyOne = MakeKeyOne(id);
 
@@ -70,28 +70,28 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
         if (item is null)
             return null;
 
-        await CacheService.SetAsync(keyOne, item, cancellationToken);
+        await CacheService.SetAsync(keyOne, item, expiration, cancellationToken);
 
         return item;
     }
 
-    public async Task<Entity> InsertAsync(Entity item, CancellationToken cancellationToken = default)
+    public async Task<Entity> InsertAsync(Entity item, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         await Task.WhenAll(
             CacheService.RemoveAsync(KeyAll, cancellationToken),
             CacheService.RemoveByPrefixAsync(PaginateKey, cancellationToken),
-            UpdateCountCacheAsync(1, cancellationToken)
+            UpdateCountCacheAsync(1, expiration, cancellationToken)
         );
 
         await Context.Set<Entity>().AddAsync(item, cancellationToken);
         string keyOne = MakeKeyOne(item.Id);
 
-        await CacheService.SetAsync(keyOne, item, cancellationToken);
+        await CacheService.SetAsync(keyOne, item, expiration, cancellationToken);
 
         return item;
     }
 
-    public async Task DeleteAsync(EntityId id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(EntityId id, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var item = await Context.Set<Entity>().FirstOrDefaultAsync(x => x.Id.Value == id.Value, cancellationToken);
         if (item is null)
@@ -102,7 +102,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
         await Task.WhenAll(
             RemoveAllCacheWithoutCountAsync(keyOne, cancellationToken),
             CacheService.RemoveByPrefixAsync(PaginateKey, cancellationToken),
-            UpdateCountCacheAsync(-1, cancellationToken)
+            UpdateCountCacheAsync(-1, expiration, cancellationToken)
         );
 
         Context.Set<Entity>().Remove(item);
@@ -123,7 +123,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
         return item;
     }
 
-    public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+    public async Task<int> CountAsync(TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var count = await CacheService.GetAsync<int>(CountKey, cancellationToken);
         if (count is not 0)
@@ -131,7 +131,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
 
         count = await Context.Set<Entity>().CountAsync(cancellationToken);
 
-        await CacheService.SetAsync(CountKey, count, cancellationToken);
+        await CacheService.SetAsync(CountKey, count, expiration, cancellationToken);
 
         return count;
     }
@@ -155,7 +155,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
         );
     }
 
-    private async Task UpdateCountCacheAsync(int value, CancellationToken cancellationToken)
+    private async Task UpdateCountCacheAsync(int value, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var count = await CacheService.GetAsync<int>(CountKey, cancellationToken);
         if (count is 0)
@@ -163,7 +163,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
 
         await CacheService.RemoveAsync(CountKey, cancellationToken);
 
-        await CacheService.SetAsync(CountKey, count + value, cancellationToken);
+        await CacheService.SetAsync(CountKey, count + value, expiration, cancellationToken);
     }
 
     private bool disposed = false;
