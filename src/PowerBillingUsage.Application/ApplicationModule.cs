@@ -1,6 +1,8 @@
 ﻿using Autofac;
+using MediatR;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
+using PowerBillingUsage.Application.Behaviors;
 using PowerBillingUsage.Domain;
 using System.Reflection;
 
@@ -18,7 +20,12 @@ public class ApplicationModule : AssemblyScanModule
             .Create(Assembly)
             .WithAllOpenGenericHandlerTypesRegistered()
             .WithRegistrationScope(RegistrationScope.Transient)
+            .WithCustomPipelineBehavior(typeof(LoggingPiplineBehavior<,>))
             .Build();
+
+        //builder.RegisterGeneric(typeof(LoggingPiplineBehavior<,>))
+        //    .As(typeof(IPipelineBehavior<,>))
+        //    .InstancePerLifetimeScope();
 
         builder.RegisterMediatR(configuration);
     }

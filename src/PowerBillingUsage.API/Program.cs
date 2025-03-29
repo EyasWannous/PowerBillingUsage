@@ -8,6 +8,7 @@ using PowerBillingUsage.API;
 using PowerBillingUsage.API.Extemsions;
 using PowerBillingUsage.Infrastructure.EntityFramework;
 using PowerBillingUsage.Infrastructure.Health;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,10 @@ builder.AddRedisDistributedCache("rediscache");
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterAutoFacModules());
 
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration)
+);
+
 builder.Services.RegisterRateLimiters();
 
 builder.Services.RegisterCors();
@@ -64,6 +69,8 @@ if (app.Environment.IsDevelopment())
     
     app.UseExceptionHandler("/Error");
 }
+
+app.UseSerilogRequestLogging();
 
 app.UseCors("AllowAll");
 
