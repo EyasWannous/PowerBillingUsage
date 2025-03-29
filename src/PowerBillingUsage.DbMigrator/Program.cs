@@ -49,11 +49,11 @@ IServiceCollection ConfigureServices(IConfiguration config)
         options.UseNpgsql(config.GetConnectionString("postgresdb"))
     );
 
-    //services.AddDbContext<PowerBillingUsageReadDbContext>(options =>
-    //    options.UseNpgsql(config.GetConnectionString("postgresdb"))
-    //        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-    //);
-    
+    services.AddDbContext<PowerBillingUsageReadDbContext>(options =>
+        options.UseNpgsql(config.GetConnectionString("postgresdb"))
+            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+    );
+
     //// Add seeder
     //services.AddScoped<SeedData>();
 

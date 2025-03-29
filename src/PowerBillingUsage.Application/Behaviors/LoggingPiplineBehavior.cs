@@ -28,6 +28,16 @@ public class LoggingPiplineBehavior<TRequest, TResponse> : IPipelineBehavior<TRe
 
         var result = await next();
         
+        if (result.IsFailure)
+        {
+            _logger.LogError(
+                "Request failure {@RequestName}, {@Error}, {DateTimeUtc}",
+                typeof(TRequest).Name,
+                result.Error,
+                DateTime.UtcNow
+            );
+        }
+
         _logger.LogInformation(
             "Completed request {@RequestName}, {DateTimeUtc}",
             typeof(TRequest).Name,
