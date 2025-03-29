@@ -3,7 +3,6 @@ using PowerBillingUsage.Application.Bills.Commands;
 using PowerBillingUsage.Application.Bills.DTOs;
 using PowerBillingUsage.Domain.Abstractions.RegisteringDependencies;
 using PowerBillingUsage.Domain.Abstractions.Shared;
-using PowerBillingUsage.Domain.Bills;
 using PowerBillingUsage.Domain.Enums;
 
 namespace PowerBillingUsage.Application.Bills;
@@ -17,13 +16,13 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService, IScoped
         _sender = sender;
     }
 
-    public async Task<Result<Bill>> CalculateBillAsync(CalculateBillDto input, CancellationToken cancellationToken = default)
+    public async Task<Result<BillDto>> CalculateBillAsync(CalculateBillDto input, CancellationToken cancellationToken = default)
     {
         var billingType = BillingType.FromValue(input.BillingTypeValue);
         if (billingType is null)
-            return Result<Bill>.ValidationFailure(BillErrors.CalculationFailure());
+            return Result<BillDto>.ValidationFailure(BillErrors.CalculationFailure());
 
-        return await _sender.Send(
+        var response = await _sender.Send(
             new CalculateBillCommand(
                 input.Consumption,
                 input.StartAt,
@@ -33,5 +32,10 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService, IScoped
             ),
             cancellationToken
         );
+
+        if (!response.IsSuccess)
+            return Result<BillDto>.ValidationFailure(response.Error);
+
+        return response.Value.MapBill();
     }
 }
