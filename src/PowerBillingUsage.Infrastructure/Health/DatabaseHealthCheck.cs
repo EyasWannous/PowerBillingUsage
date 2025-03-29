@@ -6,7 +6,7 @@ using System.Data.Common;
 
 namespace PowerBillingUsage.Infrastructure.Health;
 
-public sealed class DatabaseHealthCheck(PowerBillingUsageDbContext dbContext) : IHealthCheck
+public sealed class DatabaseHealthCheck(PowerBillingUsageWriteDbContext dbContext) : IHealthCheck
 {
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {

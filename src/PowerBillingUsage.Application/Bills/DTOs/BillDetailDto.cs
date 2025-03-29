@@ -1,4 +1,4 @@
-﻿namespace PowerBillingUsage.API.Bills.DTOs;
+﻿namespace PowerBillingUsage.Application.Bills.DTOs;
 
 public record BillDetailDto
 {

@@ -10,7 +10,7 @@ using PowerBillingUsage.Infrastructure.EntityFramework;
 
 namespace PowerBillingUsage.Infrastructure.Migrations
 {
-    [DbContext(typeof(PowerBillingUsageDbContext))]
+    [DbContext(typeof(PowerBillingUsageWriteDbContext))]
     partial class PowerBillingUsageDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

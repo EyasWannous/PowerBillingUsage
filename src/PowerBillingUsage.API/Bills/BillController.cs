@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PowerBillingUsage.API.Bills.DTOs;
+using PowerBillingUsage.Application;
 using PowerBillingUsage.Application.Bills;
-using PowerBillingUsage.Domain.Abstractions;
-using PowerBillingUsage.Domain.Enums;
+using PowerBillingUsage.Application.Bills.DTOs;
+using PowerBillingUsage.Domain.Abstractions.Services;
 using PowerBillingUsage.Infrastructure.EntityFramework;
 
 namespace PowerBillingUsage.API.Bills;
@@ -13,48 +13,29 @@ namespace PowerBillingUsage.API.Bills;
 public class BillController : ControllerBase
 {
     private readonly IBillingCalculatorAppService _billingCalculatorAppService;
-    protected IServiceProvider _serviceProvider;
+    protected IServiceProvider ServiceProvider;
 
     public BillController(IBillingCalculatorAppService billingCalculatorAppService, IServiceProvider serviceProvider)
     {
         _billingCalculatorAppService = billingCalculatorAppService;
-        _serviceProvider = serviceProvider;
+        ServiceProvider = serviceProvider;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CalculateBill(CalculateBillDto input)
+    public async Task<IActionResult> CalculateBill(CalculateBillDto input, CancellationToken cancellationToken = default)
     {
-        try
-        {
-            if (input.BillingTypeValue == BillingType.Residential.Value)
-            {
-                var residentialBill = await _billingCalculatorAppService.CalculateResidentialBillAsync(
-                    input.Consumption,
-                    input.StartAt,
-                    input.EndAt
-                );
+        var response = await _billingCalculatorAppService.CalculateBillAsync(input, cancellationToken);
 
-                return Ok(residentialBill.MapBill());
-            }
+        if (!response.IsSuccess)
+            return BadRequest(response.Error);
 
-            var commercialBill = await _billingCalculatorAppService.CalculateCommercialBillAsync(
-                input.Consumption,
-                input.StartAt,
-                input.EndAt
-            );
-
-            return Ok(commercialBill.MapBill());
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(response.Value.MapBill());
     }
 
     [HttpGet]
     public async Task<IActionResult> Test()
     {
-        var context = _serviceProvider.GetRequiredService<PowerBillingUsageDbContext>();
+        var context = ServiceProvider.GetRequiredService<PowerBillingUsageWriteDbContext>();
 
         return Ok(await context.Bills.Include(x => x.BreakDowns).ToListAsync());
     }
@@ -62,7 +43,7 @@ public class BillController : ControllerBase
     [HttpGet("cache")]
     public async Task<IActionResult> TestCache()
     {
-        var cacheService = _serviceProvider.GetRequiredService<ICacheService>();
+        var cacheService = ServiceProvider.GetRequiredService<ICacheService>();
 
         await cacheService.SetAsync(nameof(TestCache), 10);
 

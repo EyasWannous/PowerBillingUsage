@@ -19,7 +19,7 @@ try
 
     // Get DbContext and run migrations
     using var scope = serviceProvider.CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<PowerBillingUsageDbContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<PowerBillingUsageWriteDbContext>();
 
     Console.WriteLine("Applying migrations...");
     await dbContext.Database.MigrateAsync();
@@ -45,7 +45,7 @@ IServiceCollection ConfigureServices(IConfiguration config)
     services.AddServiceDiscovery();
 
     // Add DbContext
-    services.AddDbContext<PowerBillingUsageDbContext>(options =>
+    services.AddDbContext<PowerBillingUsageWriteDbContext>(options =>
         options.UseNpgsql(config.GetConnectionString("postgresdb"))
     );
 

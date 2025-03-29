@@ -11,7 +11,7 @@ using PowerBillingUsage.Infrastructure.EntityFramework;
 
 namespace PowerBillingUsage.Infrastructure.Migrations
 {
-    [DbContext(typeof(PowerBillingUsageDbContext))]
+    [DbContext(typeof(PowerBillingUsageWriteDbContext))]
     [Migration("20250318173354_InitialMigration")]
     partial class InitialMigration
     {

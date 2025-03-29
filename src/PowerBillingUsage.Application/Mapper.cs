@@ -1,7 +1,7 @@
-﻿using PowerBillingUsage.API.Bills.DTOs;
+﻿using PowerBillingUsage.Application.Bills.DTOs;
 using PowerBillingUsage.Domain.Bills;
 
-namespace PowerBillingUsage.API;
+namespace PowerBillingUsage.Application;
 
 public static class Mapper
 {

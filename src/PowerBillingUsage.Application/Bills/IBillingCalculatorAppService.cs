@@ -1,9 +1,10 @@
-﻿using PowerBillingUsage.Domain.Bills;
+﻿using PowerBillingUsage.Application.Bills.DTOs;
+using PowerBillingUsage.Domain.Abstractions.Shared;
+using PowerBillingUsage.Domain.Bills;
 
 namespace PowerBillingUsage.Application.Bills;
 
 public interface IBillingCalculatorAppService
 {
-    Task<Bill> CalculateResidentialBillAsync(int consumptionInKWh, DateTime startAt, DateTime endAt);
-    Task<Bill> CalculateCommercialBillAsync(int consumptionInKWh, DateTime startAt, DateTime endAt);
+    public Task<Result<Bill>> CalculateBillAsync(CalculateBillDto input, CancellationToken cancellationToken = default);
 }
