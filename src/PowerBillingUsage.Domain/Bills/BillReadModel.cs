@@ -1,7 +1,9 @@
 ﻿using PowerBillingUsage.Domain.Abstractions;
+using PowerBillingUsage.Domain.Attributes;
 
 namespace PowerBillingUsage.Domain.Bills;
 
+[RelatedToEntity(typeof(Bill))]
 public class BillReadModel : IReadModel<BillId>
 {
     public BillId Id { get; set; }

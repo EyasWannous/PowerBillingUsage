@@ -3,6 +3,7 @@ using PowerBillingUsage.Application.Bills.Commands;
 using PowerBillingUsage.Application.Bills.Commands.CalculateCommands;
 using PowerBillingUsage.Application.Bills.DTOs;
 using PowerBillingUsage.Application.Bills.Queries.GetBillsQueries;
+using PowerBillingUsage.Application.DTOs;
 using PowerBillingUsage.Domain.Abstractions.RegisteringDependencies;
 using PowerBillingUsage.Domain.Abstractions.Shared;
 using PowerBillingUsage.Domain.Enums;
@@ -41,7 +42,7 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService, IScoped
         return response.Value.MapBill();
     }
 
-    public async Task<Result<List<BillReadModelDto>>> GetListAsync(GetBillsDto input, CancellationToken cancellationToken = default)
+    public async Task<Result<List<BillReadModelDto>>> GetListAsync(GetPaginateListDto input, CancellationToken cancellationToken = default)
     {
         var response = await _sender.Send(
             new GetPaginateBillsQuery(
