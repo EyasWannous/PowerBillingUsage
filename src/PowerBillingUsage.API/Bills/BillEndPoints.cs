@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PowerBillingUsage.Application.Bills;
 using PowerBillingUsage.Application.Bills.DTOs;
+using PowerBillingUsage.Application.DTOs;
 
 namespace PowerBillingUsage.API.Bills;
 
@@ -38,7 +39,7 @@ public static class BillEndPoints
 
 
         app.MapPost("getbills", async (
-            [FromBody] GetBillsDto input,
+            [FromBody] GetPaginateListDto input,
             [FromServices] IBillingCalculatorAppService billingCalculatorAppService,
             CancellationToken cancellationToken = default) =>
         {
