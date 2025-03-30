@@ -6,9 +6,9 @@ namespace PowerBillingUsage.Infrastructure.EntityFramework;
 
 public class PowerBillingUsageReadDbContext(DbContextOptions<PowerBillingUsageReadDbContext> options) : DbContext(options)
 {
-    public DbSet<BillReadModel> BillReadModels { get; set; }
-    public DbSet<BillDetailReadModel> BillDetailReadModels { get; set; }
-    public DbSet<TierReadModel> TierReadModels { get; set; }
+    public DbSet<BillReadModel> Bills { get; set; }
+    public DbSet<BillDetailReadModel> BillDetails { get; set; }
+    public DbSet<TierReadModel> Tiers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

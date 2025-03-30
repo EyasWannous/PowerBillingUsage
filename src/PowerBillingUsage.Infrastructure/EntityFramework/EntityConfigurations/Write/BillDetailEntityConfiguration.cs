@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PowerBillingUsage.Domain.Bills;
+using PowerBillingUsage.Domain.Tiers;
 
 namespace PowerBillingUsage.Infrastructure.EntityFramework.EntityConfigurations.Write;
 
@@ -13,7 +14,8 @@ internal class BillDetailEntityConfiguration : IEntityTypeConfiguration<BillDeta
         builder.Property(x => x.Id)
             .HasConversion(
                 billDetailId => billDetailId.Value,
-                guid => new BillDetailId(guid)
+                guid => new BillDetailId(guid),
+                ValueComparers.GetValueComparer<BillDetailId>()
             )
             .IsRequired();
     }

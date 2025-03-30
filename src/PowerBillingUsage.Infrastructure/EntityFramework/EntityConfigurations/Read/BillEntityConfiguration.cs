@@ -13,7 +13,8 @@ internal class BillReadModelEntityConfiguration : IEntityTypeConfiguration<BillR
         builder.Property(x => x.Id)
             .HasConversion(
                 billId => billId.Value,
-                guid => new BillId(guid)
+                guid => new BillId(guid),
+                ValueComparers.GetValueComparer<BillId>()
             )
             .IsRequired();
 

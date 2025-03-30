@@ -66,7 +66,7 @@ public class ReadRepository<ReadModel, EntityId> : IReadRepository<ReadModel, En
         if (item is not null)
             return item;
 
-        item = await Context.Set<ReadModel>().FirstOrDefaultAsync(x => x.Id.Value == id.Value, cancellationToken);
+        item = await Context.Set<ReadModel>().FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
         if (item is null)
             return null;
 

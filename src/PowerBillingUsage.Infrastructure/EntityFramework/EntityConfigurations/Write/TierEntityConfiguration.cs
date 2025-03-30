@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PowerBillingUsage.Domain.Tiers;
 
@@ -13,7 +14,8 @@ internal class TierEntityConfiguration : IEntityTypeConfiguration<Tier>
         builder.Property(x => x.Id)
             .HasConversion(
                 tierId => tierId.Value,
-                guid => new TierId(guid)
+                guid => new TierId(guid),
+                ValueComparers.GetValueComparer<TierId>()
             )
             .IsRequired();
 

@@ -66,7 +66,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
         if (item is not null)
             return item;
 
-        item = await Context.Set<Entity>().FirstOrDefaultAsync(x => x.Id.Value == id.Value, cancellationToken);
+        item = await Context.Set<Entity>().FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
         if (item is null)
             return null;
 
@@ -93,7 +93,7 @@ public class Repository<Entity, EntityId> : IRepository<Entity, EntityId>, IScop
 
     public async Task DeleteAsync(EntityId id, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
-        var item = await Context.Set<Entity>().FirstOrDefaultAsync(x => x.Id.Value == id.Value, cancellationToken);
+        var item = await Context.Set<Entity>().FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
         if (item is null)
             throw new ArgumentNullException(nameof(item));
 

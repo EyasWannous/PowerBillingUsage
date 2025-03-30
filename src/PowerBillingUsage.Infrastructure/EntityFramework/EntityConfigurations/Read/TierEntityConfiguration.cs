@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PowerBillingUsage.Domain.Bills;
 using PowerBillingUsage.Domain.Tiers;
 
 namespace PowerBillingUsage.Infrastructure.EntityFramework.EntityConfigurations.Read;
@@ -13,7 +14,8 @@ internal class TierReadModelEntityConfiguration : IEntityTypeConfiguration<TierR
         builder.Property(x => x.Id)
             .HasConversion(
                 tierId => tierId.Value,
-                guid => new TierId(guid)
+                guid => new TierId(guid),
+                ValueComparers.GetValueComparer<TierId>()
             )
             .IsRequired();
 

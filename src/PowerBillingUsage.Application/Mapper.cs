@@ -12,7 +12,7 @@ public static class Mapper
             BillingTypeValue = bill.BillingTypeValue,
             EndAt = bill.EndAt,
             StartAt = bill.StartAt,
-            BreakDowns = bill.BreakDowns.Select(MapBillDeatil).ToList(),
+            BreakDowns = [.. bill.BreakDowns.Select(MapBillDeatil)],
             Total = bill.Total,
         };
     }
@@ -25,6 +25,30 @@ public static class Mapper
             Consumption = billDetail.Consumption,
             Rate = billDetail.Rate,
             Total = billDetail.Total,
+        };
+    }
+
+    public static BillReadModelDto MapBillReadModel(this BillReadModel billReadModel)
+    {
+        return new BillReadModelDto
+        {
+            Id = billReadModel.Id.Value,
+            BillingTypeValue = billReadModel.BillingTypeValue,
+            StartAt = billReadModel.StartAt,
+            EndAt = billReadModel.EndAt,
+            BreakDowns = [.. billReadModel.BreakDowns.Select(MapBillDetailReadModel)],
+            Total = billReadModel.Total,
+        };
+    }
+
+    public static BillDetailReadModelDto MapBillDetailReadModel(this BillDetailReadModel billDetailReadModel)
+    {
+        return new BillDetailReadModelDto
+        {
+            TierName = billDetailReadModel.TierName,
+            Consumption = billDetailReadModel.Consumption,
+            Rate = billDetailReadModel.Rate,
+            Total = billDetailReadModel.Total
         };
     }
 }

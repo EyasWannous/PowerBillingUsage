@@ -41,7 +41,7 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
 
     public async Task DeleteAsync(EntityId id, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
-        var item = await Context.Set<Entity>().FirstOrDefaultAsync(x => x.Id.Value == id.Value, cancellationToken);
+        var item = await Context.Set<Entity>().FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
         if (item is null)
             throw new ArgumentNullException(nameof(item));
 

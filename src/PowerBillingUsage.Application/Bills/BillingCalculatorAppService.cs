@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using PowerBillingUsage.Application.Bills.Commands;
+using PowerBillingUsage.Application.Bills.Commands.CalculateCommands;
 using PowerBillingUsage.Application.Bills.DTOs;
+using PowerBillingUsage.Application.Bills.Queries.GetBillsQueries;
 using PowerBillingUsage.Domain.Abstractions.RegisteringDependencies;
 using PowerBillingUsage.Domain.Abstractions.Shared;
 using PowerBillingUsage.Domain.Enums;
@@ -37,5 +39,35 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService, IScoped
             return Result<BillDto>.ValidationFailure(response.Error);
 
         return response.Value.MapBill();
+    }
+
+    public async Task<Result<List<BillReadModelDto>>> GetListAsync(GetBillsDto input, CancellationToken cancellationToken = default)
+    {
+        var response = await _sender.Send(
+            new GetPaginateBillsQuery(
+                input.Skip,
+                input.Take
+            ),
+            cancellationToken
+        );
+
+        if (!response.IsSuccess)
+            return Result<List<BillReadModelDto>>.ValidationFailure(response.Error);
+
+        return response.Value.Select(x => x.MapBillReadModel()).ToList();
+    }
+
+    public async Task<Result<BillReadModelDto?>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var response = await _sender.Send(
+            new GetBillByIdQuery(id),
+            cancellationToken
+        );
+
+        if (!response.IsSuccess)
+            return Result<BillReadModelDto?>.ValidationFailure(response.Error);
+
+        return response.Value.MapBillReadModel();
+
     }
 }
