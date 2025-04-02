@@ -1,7 +1,9 @@
 ﻿using PowerBillingUsage.Domain.Abstractions;
+using PowerBillingUsage.Domain.Attributes;
 
 namespace PowerBillingUsage.Domain.Tiers;
 
+[CacheEntity(entityType: typeof(Tier))]
 public class Tier : IEntity<TierId>
 {
     public TierId Id { get; private set; }

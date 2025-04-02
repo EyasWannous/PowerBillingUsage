@@ -5,9 +5,9 @@ using PowerBillingUsage.Domain.Bills;
 
 namespace PowerBillingUsage.Application.Bills.Queries.GetBillsQueries;
 
-public record GetPaginateBillsQuery(int Skip, int Take) : IQuery<List<BillReadModel>>;
+public record GetPaginateBillsQuery(int Skip, int Take) : IQuery<PaingationResponse<BillReadModel>>;
 
-internal sealed class GetPaginateBillsQueryHandler : IQueryHandler<GetPaginateBillsQuery, List<BillReadModel>>
+internal sealed class GetPaginateBillsQueryHandler : IQueryHandler<GetPaginateBillsQuery, PaingationResponse<BillReadModel>>
 {
     private readonly IReadRepository<BillReadModel, BillId> _billReadModelRepository;
 
@@ -16,17 +16,15 @@ internal sealed class GetPaginateBillsQueryHandler : IQueryHandler<GetPaginateBi
         _billReadModelRepository = billReadModelRepository;
     }
 
-    public async Task<Result<List<BillReadModel>>> Handle(GetPaginateBillsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaingationResponse<BillReadModel>>> Handle(GetPaginateBillsQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var billReadModels = await _billReadModelRepository.GetPaginateAsync(request.Skip, request.Take, null, cancellationToken);
-
-            return billReadModels.ToList();
+            return await _billReadModelRepository.GetPaginateAsync(request.Skip, request.Take, null, cancellationToken);
         }
         catch (Exception ex)
         {
-            return Result< List<BillReadModel>>.ValidationFailure(BillReadModelErrors.GetPaginateBillsFailure(ex.Message));
+            return Result<PaingationResponse<BillReadModel>>.ValidationFailure(BillReadModelErrors.GetPaginateBillsFailure(ex.Message));
         }
     }
 }

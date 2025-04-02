@@ -8,5 +8,5 @@ public interface IBillingCalculatorAppService
 {
     public Task<Result<BillDto>> CalculateBillAsync(CalculateBillDto input, CancellationToken cancellationToken = default);
     Task<Result<BillReadModelDto?>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<Result<List<BillReadModelDto>>> GetListAsync(GetPaginateListDto input, CancellationToken cancellationToken = default);
+    Task<Result<PaingationResponse<BillReadModelDto>>> GetListAsync(GetPaginateListDto input, CancellationToken cancellationToken = default);
 }
