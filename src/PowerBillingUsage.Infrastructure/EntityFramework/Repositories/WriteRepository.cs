@@ -13,50 +13,28 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
 {
     protected readonly PowerBillingUsageWriteDbContext Context;
     protected readonly ICacheService CacheService;
-    protected readonly ICacheInvalidationHelper CacheInvalidationHelper;
-
-    protected readonly string KeyAll = $"allOf_{typeof(Entity)}";
-    protected readonly string PaginateKey = $"paginate_{typeof(Entity)}_";
-    protected readonly string KeyOne = $"oneOf_{typeof(Entity)}_Id: ";
-    protected readonly string CountKey = $"count_{typeof(Entity)}";
+    protected readonly ICacheKeyHelper<Entity> CacheKeyHelper;
 
     public WriteRepository(
         PowerBillingUsageWriteDbContext context,
         ICacheService cacheService,
-        ICacheInvalidationHelper cacheInvalidationHelper)
+        ICacheKeyHelper<Entity> cacheKeyHelper)
     {
         Context = context;
         CacheService = cacheService;
-        CacheInvalidationHelper = cacheInvalidationHelper;
+        CacheKeyHelper = cacheKeyHelper;
     }
 
     public async Task<Entity> InsertAsync(Entity item, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
-        var tasks = new List<Task>();
-        tasks.AddRange(
-            CacheService.RemoveAsync(KeyAll, cancellationToken),
-            CacheService.RemoveByPrefixAsync(PaginateKey, cancellationToken),
+        await Task.WhenAll(
+            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken),
+            CacheService.RemoveByPrefixAsync(CacheKeyHelper.PaginateKey, cancellationToken),
             UpdateCountCacheAsync(1, expiration, cancellationToken)
         );
 
-        // Invalidate related ReadModel caches
-        var relatedTypes = CacheInvalidationHelper.GetRelatedTypes(typeof(Entity));
-        foreach (var readModelType in relatedTypes)
-        {
-            var readModelKeyAll = $"allOf_{readModelType}";
-            var readModelPaginateKey = $"paginate_{readModelType}_";
-            var readModelCountKey = $"count_{readModelType}";
-            tasks.AddRange(
-                CacheService.RemoveAsync(readModelKeyAll, cancellationToken),
-                CacheService.RemoveByPrefixAsync(readModelPaginateKey, cancellationToken),
-                UpdateRelatedCountCacheAsync(readModelCountKey, 1, expiration, cancellationToken)
-            );
-        }
-
-        await Task.WhenAll(tasks);
-
         await Context.Set<Entity>().AddAsync(item, cancellationToken);
-        string keyOne = MakeKeyOne(item.Id);
+        string keyOne = CacheKeyHelper.MakeKeyOne(item.Id);
 
         await CacheService.SetAsync(keyOne, item, expiration, cancellationToken);
 
@@ -69,32 +47,13 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
         if (item is null)
             throw new ArgumentNullException(nameof(item));
 
-        var keyOne = MakeKeyOne(id);
+        var keyOne = CacheKeyHelper.MakeKeyOne(id);
 
-        var trasks = new List<Task>();
-        trasks.AddRange(
+        await Task.WhenAll(
             RemoveAllCacheWithoutCountAsync(keyOne, cancellationToken),
-            CacheService.RemoveByPrefixAsync(PaginateKey, cancellationToken),
+            CacheService.RemoveByPrefixAsync(CacheKeyHelper.PaginateKey, cancellationToken),
             UpdateCountCacheAsync(-1, expiration, cancellationToken)
         );
-
-        // Invalidate related ReadModel caches
-        var relatedTypes = CacheInvalidationHelper.GetRelatedTypes(typeof(Entity));
-        foreach (var readModelType in relatedTypes)
-        {
-            var readModelKeyAll = $"allOf_{readModelType}";
-            var readModelPaginateKey = $"paginate_{readModelType}_";
-            var readModelKeyOne = $"oneOf_{readModelType}_Id: {id.Value}";
-            var readModelCountKey = $"count_{readModelType}";
-            trasks.AddRange(
-                CacheService.RemoveAsync(readModelKeyAll, cancellationToken),
-                CacheService.RemoveAsync(readModelKeyOne, cancellationToken),
-                CacheService.RemoveByPrefixAsync(readModelPaginateKey, cancellationToken),
-                UpdateRelatedCountCacheAsync(readModelCountKey, -1, expiration, cancellationToken)
-            );
-        }
-
-        await Task.WhenAll(trasks);
 
         Context.Set<Entity>().Remove(item);
     }
@@ -102,29 +61,12 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
     public async Task<Entity> UpdateAsync(Entity item, CancellationToken cancellationToken = default)
     {
         //_context.Entry(item).State = EntityState.Modified;
-        var keyOne = MakeKeyOne(item.Id);
+        var keyOne = CacheKeyHelper.MakeKeyOne(item.Id);
 
-        var tasks = new List<Task>();
-        tasks.AddRange(
+        await Task.WhenAll(
             RemoveAllCacheWithoutCountAsync(keyOne, cancellationToken),
-            CacheService.RemoveByPrefixAsync(PaginateKey, cancellationToken)
+            CacheService.RemoveByPrefixAsync(CacheKeyHelper.PaginateKey, cancellationToken)
         );
-
-        // Invalidate related ReadModel caches (no count update needed for update)
-        var relatedTypes = CacheInvalidationHelper.GetRelatedTypes(typeof(Entity));
-        foreach (var readModelType in relatedTypes)
-        {
-            var readModelKeyAll = $"allOf_{readModelType}";
-            var readModelPaginateKey = $"paginate_{readModelType}_";
-            var readModelKeyOne = $"oneOf_{readModelType}_Id: {item.Id.Value}";
-            tasks.AddRange(
-                CacheService.RemoveAsync(readModelKeyAll, cancellationToken),
-                CacheService.RemoveAsync(readModelKeyOne, cancellationToken),
-                CacheService.RemoveByPrefixAsync(readModelPaginateKey, cancellationToken)
-            );
-        }
-
-        await Task.WhenAll(tasks);
 
         Context.Set<Entity>().Update(item);
 
@@ -134,34 +76,23 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         => await Context.SaveChangesAsync(cancellationToken);
 
-    private string MakeKeyOne(EntityId id) => KeyOne + id.Value.ToString();
-
     private Task RemoveAllCacheWithoutCountAsync(string keyOne, CancellationToken cancellationToken = default)
     {
         return Task.WhenAll(
-            CacheService.RemoveAsync(KeyAll, cancellationToken),
+            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken),
             CacheService.RemoveByPrefixAsync(keyOne, cancellationToken)
         );
     }
 
     private async Task UpdateCountCacheAsync(int value, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
-        var count = await CacheService.GetAsync<int>(CountKey, cancellationToken);
+        var count = await CacheService.GetAsync<int>(CacheKeyHelper.CountKey, cancellationToken);
         if (count is 0)
             return;
 
-        await CacheService.RemoveAsync(CountKey, cancellationToken);
-        await CacheService.SetAsync(CountKey, count + value, expiration, cancellationToken);
-    }
+        await CacheService.RemoveAsync(CacheKeyHelper.CountKey, cancellationToken);
 
-    private async Task UpdateRelatedCountCacheAsync(string countKey, int value, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
-    {
-        var count = await CacheService.GetAsync<int>(countKey, cancellationToken);
-        if (count is 0)
-            return;
-
-        await CacheService.RemoveAsync(countKey, cancellationToken);
-        await CacheService.SetAsync(countKey, count + value, expiration, cancellationToken);
+        await CacheService.SetAsync(CacheKeyHelper.CountKey, count + value, expiration, cancellationToken);
     }
 
     private bool disposed = false;

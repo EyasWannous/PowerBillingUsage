@@ -3,6 +3,7 @@ using PowerBillingUsage.Domain.Attributes;
 
 namespace PowerBillingUsage.Domain.Tiers;
 
+[CacheEntity(entityType: typeof(Tier), fallbackName: nameof(TierReadModel))]
 [RelatedToEntity(typeof(Tier))]
 public class TierReadModel : IReadModel<TierId>
 {

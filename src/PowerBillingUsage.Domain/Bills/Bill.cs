@@ -1,7 +1,9 @@
 ﻿using PowerBillingUsage.Domain.Abstractions;
+using PowerBillingUsage.Domain.Attributes;
 
 namespace PowerBillingUsage.Domain.Bills;
 
+[CacheEntity(entityType: typeof(Bill))]
 public class Bill : IEntity<BillId>
 {
     public BillId Id { get; private set; }

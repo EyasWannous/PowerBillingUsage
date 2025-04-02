@@ -3,6 +3,7 @@ using PowerBillingUsage.Domain.Attributes;
 
 namespace PowerBillingUsage.Domain.Bills;
 
+[CacheEntity(entityType: typeof(BillDetail), fallbackName: nameof(BillDetailReadModel))]
 [RelatedToEntity(typeof(BillDetail))]
 public class BillDetailReadModel : IEntity<BillDetailId>
 {

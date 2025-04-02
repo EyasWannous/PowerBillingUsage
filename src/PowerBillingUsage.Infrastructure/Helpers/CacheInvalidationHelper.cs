@@ -23,13 +23,13 @@ public class CacheInvalidationHelper : ICacheInvalidationHelper, ISingletonDepen
 
         foreach (var type in readModelTypes)
         {
-            var attributes = type.GetCustomAttributes(typeof(RelatedToEntityAttribute), false);
-            foreach (RelatedToEntityAttribute attr in attributes)
+            var attributes = type.GetCustomAttributes<RelatedToEntityAttribute>(false);
+            foreach (var attribute in attributes)
             {
-                if (!_relatedTypes.ContainsKey(attr.EntityType))
-                    _relatedTypes[attr.EntityType] = [];
+                if (!_relatedTypes.ContainsKey(attribute.EntityType))
+                    _relatedTypes[attribute.EntityType] = [];
                 
-                _relatedTypes[attr.EntityType].Add(type);
+                _relatedTypes[attribute.EntityType].Add(type);
             }
         }
     }

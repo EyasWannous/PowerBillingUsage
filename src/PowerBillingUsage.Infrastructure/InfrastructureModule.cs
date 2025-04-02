@@ -33,9 +33,13 @@ public class InfrastructureModule : AssemblyScanModule
             .ToList();
 
         builder.RegisterType<CacheInvalidationHelper>()
-               .As<ICacheInvalidationHelper>()
-               .WithParameter("assembliesToScan", assembliesToScan)
-               .SingleInstance();
+            .As<ICacheInvalidationHelper>()
+            .WithParameter("assembliesToScan", assembliesToScan)
+            .SingleInstance();
+
+        builder.RegisterGeneric(typeof(CacheKeyHelper<>))
+           .As(typeof(ICacheKeyHelper<>))
+           .InstancePerLifetimeScope();
     }
 }
 

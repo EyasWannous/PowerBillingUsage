@@ -9,7 +9,7 @@ using PowerBillingUsage.Infrastructure.EntityFramework;
 using PowerBillingUsage.Infrastructure.EntityFramework.Repositories;
 using PowerBillingUsage.Infrastructure.Helpers;
 
-namespace PowerBillingUsage.Core.Test;
+namespace PowerBillingUsage.Domain.Test.BillTests;
 
 public class BillingCalculatorTests
 {
@@ -19,7 +19,7 @@ public class BillingCalculatorTests
     private readonly PowerBillingUsageWriteDbContext _context;
     private readonly BillManager _billManager;
     private readonly ICacheService _cacheService;
-    private readonly ICacheInvalidationHelper _cacheInvalidationHelper;
+    private readonly ICacheKeyHelper<Bill> _cacheKeyHelper;
 
     public static IEnumerable<object[]> GetValidatedResidentialBillingData =>
     [
@@ -159,9 +159,9 @@ public class BillingCalculatorTests
             .ToList();
 
         _cacheService = Mock.Of<ICacheService>();
-        _cacheInvalidationHelper = new CacheInvalidationHelper(assembliesToScan);
-
-        _billManager = new BillManager(new Repository<Bill, BillId>(_context, _cacheService, _cacheInvalidationHelper));
+        _cacheKeyHelper = new CacheKeyHelper<Bill>();
+        
+        _billManager = new BillManager(new Repository<Bill, BillId>(_context, _cacheService, _cacheKeyHelper));
     }
 
     internal void Dispose()

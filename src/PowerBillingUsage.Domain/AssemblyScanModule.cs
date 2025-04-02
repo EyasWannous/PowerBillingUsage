@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using PowerBillingUsage.Domain.Abstractions.Helpers;
 using PowerBillingUsage.Domain.Abstractions.RegisteringDependencies;
 using PowerBillingUsage.Domain.Abstractions.Repositories;
 using System.Reflection;
@@ -43,6 +44,11 @@ public abstract class AssemblyScanModule : Autofac.Module
 
         builder.RegisterAssemblyTypes(Assembly)
             .Where(t => t.IsClosedTypeOf(typeof(IWriteRepository<,>)))
+            .AsImplementedInterfaces()
+            .InstancePerLifetimeScope();
+
+        builder.RegisterAssemblyTypes(Assembly)
+            .Where(t => t.IsClosedTypeOf(typeof(ICacheKeyHelper<>)))
             .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
     }
