@@ -21,10 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\aspire\PowerBillingUsage.ServiceDefaults\PowerBillingUsage.ServiceDefaults.csproj" />
     <ProjectReference Include="..\PowerBillingUsage.Application\PowerBillingUsage.Application.csproj" />
     <ProjectReference Include="..\PowerBillingUsage.Domain\PowerBillingUsage.Domain.csproj" />
     <ProjectReference Include="..\PowerBillingUsage.Infrastructure\PowerBillingUsage.Infrastructure.csproj" />
-    <ProjectReference Include="..\PowerBillingUsage.ServiceDefaults\PowerBillingUsage.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

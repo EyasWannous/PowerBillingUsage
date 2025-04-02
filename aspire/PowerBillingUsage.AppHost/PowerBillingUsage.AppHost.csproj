@@ -24,9 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PowerBillingUsage.API\PowerBillingUsage.API.csproj" />
-    <ProjectReference Include="..\PowerBillingUsage.DbMigrator\PowerBillingUsage.DbMigrator.csproj" />
-    <ProjectReference Include="..\PowerBillingUsage.Web\PowerBillingUsage.Web.csproj" />
+    <ProjectReference Include="..\..\src\PowerBillingUsage.API\PowerBillingUsage.API.csproj" />
+    <ProjectReference Include="..\..\src\PowerBillingUsage.DbMigrator\PowerBillingUsage.DbMigrator.csproj" />
+    <ProjectReference Include="..\..\src\PowerBillingUsage.Web\PowerBillingUsage.Web.csproj" />
   </ItemGroup>
+
 
 </Project>
