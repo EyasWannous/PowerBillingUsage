@@ -40,7 +40,7 @@ public abstract class AssemblyScanModule : Autofac.Module
         builder.RegisterAssemblyTypes(Assembly)
             .Where(t => t.IsClosedTypeOf(typeof(IReadRepository<,>)))
             .AsImplementedInterfaces()
-            .InstancePerLifetimeScope(); 
+            .InstancePerLifetimeScope();
 
         builder.RegisterAssemblyTypes(Assembly)
             .Where(t => t.IsClosedTypeOf(typeof(IWriteRepository<,>)))

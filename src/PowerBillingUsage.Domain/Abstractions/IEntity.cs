@@ -1,6 +1,4 @@
 ﻿namespace PowerBillingUsage.Domain.Abstractions;
 
-public interface IEntity<EntityId> where EntityId : IEntityId
-{
-    EntityId Id { get; }
-}
+public interface IEntity<TEntityId> : IHasId<TEntityId>
+    where TEntityId : IEntityId;

@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using MediatR;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using MediatR.Extensions.Autofac.DependencyInjection.Builder;
 using PowerBillingUsage.Application.Behaviors;

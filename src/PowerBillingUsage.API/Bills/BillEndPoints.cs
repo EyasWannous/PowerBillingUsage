@@ -9,7 +9,7 @@ public static class BillEndPoints
 {
     public static IEndpointRouteBuilder MapBillEndPoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("calculate", async(
+        app.MapPost("calculate", async (
             [FromBody] CalculateBillDto input,
             [FromServices] IBillingCalculatorAppService billingCalculatorAppService,
             CancellationToken cancellationToken = default) =>
@@ -23,7 +23,7 @@ public static class BillEndPoints
         })
         .WithOpenApi();
 
-        app.MapGet("/{id:Guid}", async(
+        app.MapGet("/{id:Guid}", async (
             [FromRoute] Guid id,
             [FromServices] IBillingCalculatorAppService billingCalculatorAppService,
             CancellationToken cancellationToken = default) =>

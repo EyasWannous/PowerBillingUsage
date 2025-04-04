@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using PowerBillingUsage.Infrastructure.EntityFramework;
-using System.Data.Common;
 
 namespace PowerBillingUsage.Infrastructure.Health;
 

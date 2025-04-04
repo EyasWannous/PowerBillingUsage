@@ -1,8 +1,8 @@
-﻿using PowerBillingUsage.Domain.Abstractions.Helpers;
-using PowerBillingUsage.Domain.Abstractions;
+﻿using PowerBillingUsage.Domain.Abstractions;
+using PowerBillingUsage.Domain.Abstractions.Helpers;
+using PowerBillingUsage.Domain.Abstractions.RegisteringDependencies;
 using PowerBillingUsage.Domain.Attributes;
 using System.Reflection;
-using PowerBillingUsage.Domain.Abstractions.RegisteringDependencies;
 
 namespace PowerBillingUsage.Infrastructure.Helpers;
 
@@ -28,7 +28,7 @@ public class CacheInvalidationHelper : ICacheInvalidationHelper, ISingletonDepen
             {
                 if (!_relatedTypes.ContainsKey(attribute.EntityType))
                     _relatedTypes[attribute.EntityType] = [];
-                
+
                 _relatedTypes[attribute.EntityType].Add(type);
             }
         }

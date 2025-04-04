@@ -10,7 +10,7 @@ internal sealed class LifecycleLogger(ILogger<LifecycleLogger> logger) : IDistri
         CancellationToken cancellationToken = default)
     {
         logger.LogInformation("BeforeStartAsync");
-        
+
         return Task.CompletedTask;
     }
 
@@ -19,7 +19,7 @@ internal sealed class LifecycleLogger(ILogger<LifecycleLogger> logger) : IDistri
         CancellationToken cancellationToken = default)
     {
         logger.LogInformation("AfterEndpointsAllocatedAsync");
-        
+
         return Task.CompletedTask;
     }
 
@@ -28,7 +28,7 @@ internal sealed class LifecycleLogger(ILogger<LifecycleLogger> logger) : IDistri
         CancellationToken cancellationToken = default)
     {
         logger.LogInformation("AfterResourcesCreatedAsync");
-        
+
         return Task.CompletedTask;
     }
 }
