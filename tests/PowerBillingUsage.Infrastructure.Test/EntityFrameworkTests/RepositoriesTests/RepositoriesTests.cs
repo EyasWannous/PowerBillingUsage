@@ -10,9 +10,9 @@ using PowerBillingUsage.Infrastructure.EntityFramework;
 using PowerBillingUsage.Infrastructure.EntityFramework.Repositories;
 using PowerBillingUsage.Infrastructure.Helpers;
 
-namespace PowerBillingUsage.Infrastructure.Test.EntityFrameworkTests.Repositories;
+namespace PowerBillingUsage.Infrastructure.Test.EntityFrameworkTests.RepositoriesTests;
 
-public class RepositoryTest
+public class RepositoriesTests
 {
     private static readonly DateTime DefaultStartDate = new(2025, 01, 01, 20, 10, 00);
     private static readonly DateTime DefaultEndDate = new(2025, 01, 31, 03, 15, 00);
@@ -43,7 +43,7 @@ public class RepositoryTest
         ]
     ];
 
-    public RepositoryTest()
+    public RepositoriesTests()
     {
         var databaseName = Guid.NewGuid().ToString();
         var inMemoryDbRoot = new InMemoryDatabaseRoot();
