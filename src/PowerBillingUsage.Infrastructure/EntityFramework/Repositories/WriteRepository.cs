@@ -52,7 +52,6 @@ public class WriteRepository<Entity, EntityId> :
 
         var keyOne = CacheKeyHelper.MakeKeyOne(id);
 
-        // Remove cache entries
         await Task.WhenAll(
             CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
             CacheService.RemoveAsync(keyOne, cancellationToken).AsTask(),
@@ -67,7 +66,6 @@ public class WriteRepository<Entity, EntityId> :
     {
         var keyOne = CacheKeyHelper.MakeKeyOne(item.Id);
 
-        // Remove cache entries
         await Task.WhenAll(
             CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
             CacheService.RemoveAsync(keyOne, cancellationToken).AsTask(),
