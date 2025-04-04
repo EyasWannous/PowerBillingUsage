@@ -27,7 +27,7 @@ public sealed class LoggingPipelineBehavior<TRequest, TResponse> : IPipelineBeha
         );
 
         var result = await next();
-        
+
         if (result.IsFailure)
         {
             _logger.LogError(

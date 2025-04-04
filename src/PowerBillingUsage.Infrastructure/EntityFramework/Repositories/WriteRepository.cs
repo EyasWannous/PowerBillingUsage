@@ -1,42 +1,46 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PowerBillingUsage.Domain.Abstractions;
+using PowerBillingUsage.Domain.Abstractions.Helpers;
 using PowerBillingUsage.Domain.Abstractions.RegisteringDependencies;
 using PowerBillingUsage.Domain.Abstractions.Repositories;
 using PowerBillingUsage.Domain.Abstractions.Services;
-using PowerBillingUsage.Domain.Abstractions;
-using PowerBillingUsage.Domain.Abstractions.Helpers;
 
 namespace PowerBillingUsage.Infrastructure.EntityFramework.Repositories;
 
-public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, EntityId>, IScopedDependency, IDisposable
+public class WriteRepository<Entity, EntityId> :
+    BaseRepository<Entity, EntityId, PowerBillingUsageWriteDbContext>,
+    IWriteRepository<Entity, EntityId>,
+    IScopedDependency
     where Entity : class, IEntity<EntityId>
     where EntityId : IEntityId
 {
-    protected readonly PowerBillingUsageWriteDbContext Context;
-    protected readonly ICacheService CacheService;
-    protected readonly ICacheKeyHelper<Entity> CacheKeyHelper;
-
     public WriteRepository(
         PowerBillingUsageWriteDbContext context,
-        ICacheService cacheService,
+        IHybridCacheService cacheService,
         ICacheKeyHelper<Entity> cacheKeyHelper)
+        : base(context, cacheService, cacheKeyHelper)
     {
-        Context = context;
-        CacheService = cacheService;
-        CacheKeyHelper = cacheKeyHelper;
     }
 
     public async Task<Entity> InsertAsync(Entity item, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
+        // Remove relevant cache entries
         await Task.WhenAll(
-            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken),
-            CacheService.RemoveByPrefixAsync(CacheKeyHelper.PaginateKey, cancellationToken),
+            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
+            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKey]).AsTask(),
             UpdateCountCacheAsync(1, expiration, cancellationToken)
         );
 
         await Context.Set<Entity>().AddAsync(item, cancellationToken);
         string keyOne = CacheKeyHelper.MakeKeyOne(item.Id);
 
-        await CacheService.SetAsync(keyOne, item, expiration, cancellationToken);
+        await CacheService.SetAsync(
+            keyOne,
+            item,
+            tags: [keyOne],
+            expiration: expiration,
+            cancellationToken: cancellationToken
+        );
 
         return item;
     }
@@ -49,9 +53,11 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
 
         var keyOne = CacheKeyHelper.MakeKeyOne(id);
 
+        // Remove cache entries
         await Task.WhenAll(
-            RemoveAllCacheWithoutCountAsync(keyOne, cancellationToken),
-            CacheService.RemoveByPrefixAsync(CacheKeyHelper.PaginateKey, cancellationToken),
+            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
+            CacheService.RemoveAsync(keyOne, cancellationToken).AsTask(),
+            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKey], cancellationToken).AsTask(),
             UpdateCountCacheAsync(-1, expiration, cancellationToken)
         );
 
@@ -60,12 +66,13 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
 
     public async Task<Entity> UpdateAsync(Entity item, CancellationToken cancellationToken = default)
     {
-        //_context.Entry(item).State = EntityState.Modified;
         var keyOne = CacheKeyHelper.MakeKeyOne(item.Id);
 
+        // Remove cache entries
         await Task.WhenAll(
-            RemoveAllCacheWithoutCountAsync(keyOne, cancellationToken),
-            CacheService.RemoveByPrefixAsync(CacheKeyHelper.PaginateKey, cancellationToken)
+            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
+            CacheService.RemoveAsync(keyOne, cancellationToken).AsTask(),
+            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKey], cancellationToken).AsTask()
         );
 
         Context.Set<Entity>().Update(item);
@@ -76,44 +83,24 @@ public class WriteRepository<Entity, EntityId> : IWriteRepository<Entity, Entity
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         => await Context.SaveChangesAsync(cancellationToken);
 
-    private Task RemoveAllCacheWithoutCountAsync(string keyOne, CancellationToken cancellationToken = default)
-    {
-        return Task.WhenAll(
-            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken),
-            CacheService.RemoveByPrefixAsync(keyOne, cancellationToken)
-        );
-    }
-
     private async Task UpdateCountCacheAsync(int value, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
-        var count = await CacheService.GetAsync<int>(CacheKeyHelper.CountKey, cancellationToken);
-        if (count is 0)
-            return;
+        var count = await CacheService.GetOrCreateAsync<int>(
+            CacheKeyHelper.CountKey,
+            async ct => await Context.Set<Entity>().CountAsync(ct),
+            tags: [CacheKeyHelper.CountKey],
+            expiration: expiration,
+            cancellationToken: cancellationToken
+        );
 
         await CacheService.RemoveAsync(CacheKeyHelper.CountKey, cancellationToken);
 
-        await CacheService.SetAsync(CacheKeyHelper.CountKey, count + value, expiration, cancellationToken);
+        await CacheService.SetAsync(
+            CacheKeyHelper.CountKey,
+            count + value,
+            tags: [CacheKeyHelper.CountKey],
+            expiration: expiration,
+            cancellationToken: cancellationToken
+        );
     }
-
-    private bool disposed = false;
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposed)
-        {
-            if (disposing)
-            {
-                Context.Dispose();
-            }
-        }
-
-        disposed = true;
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
 }

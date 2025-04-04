@@ -19,7 +19,7 @@ public class RepositoryTest
 
     private readonly PowerBillingUsageWriteDbContext _context;
     private readonly Repository<Bill, BillId> _billRepository;
-    private readonly ICacheService _cacheService;
+    private readonly IHybridCacheService _cacheService;
     private readonly ICacheKeyHelper<Bill> _cacheKeyHelper;
     private readonly ReadRepository<BillReadModel, BillId> _billReadRepository;
     private readonly PowerBillingUsageReadDbContext _readContext;
@@ -54,7 +54,7 @@ public class RepositoryTest
 
         _context = new PowerBillingUsageWriteDbContext(options);
 
-        _cacheService = Mock.Of<ICacheService>();
+        _cacheService = Mock.Of<IHybridCacheService>();
         _cacheKeyHelper = new CacheKeyHelper<Bill>();
 
         _billRepository = new Repository<Bill, BillId>(_context, _cacheService, _cacheKeyHelper);
@@ -80,7 +80,7 @@ public class RepositoryTest
         await _billRepository.SaveChangesAsync();
 
         var query = await _billRepository.GetQueryableWithDetailsAsync(x => x.BreakDowns);
-        
+
         var billFromRepo = await query.FirstOrDefaultAsync(x => x.Id.Equals(bill.Id));
         Assert.NotNull(billFromRepo);
         Assert.NotEmpty(billFromRepo.BreakDowns);

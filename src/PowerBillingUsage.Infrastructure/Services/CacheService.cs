@@ -8,7 +8,7 @@ namespace PowerBillingUsage.Infrastructure.Services;
 
 public class CacheService : ICacheService, IScopedDependency
 {
-    private static readonly TimeSpan _defualtExpiration = TimeSpan.FromMinutes(5);
+    private static readonly TimeSpan _defaultExpiration = TimeSpan.FromMinutes(5);
 
     private static readonly ConcurrentDictionary<string, bool> _cachekeys = new();
 
@@ -61,7 +61,7 @@ public class CacheService : ICacheService, IScopedDependency
         await Task.WhenAll(tasks);
     }
 
-    public async Task SetAsync<T>(string key, T value, TimeSpan? expirationTime = null, CancellationToken cancellationToken = default)
+    public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         string cacheItem = JsonConvert.SerializeObject(value);
 
@@ -70,7 +70,7 @@ public class CacheService : ICacheService, IScopedDependency
             cacheItem,
             new DistributedCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = expirationTime ?? _defualtExpiration
+                AbsoluteExpirationRelativeToNow = expiration ?? _defaultExpiration
             },
             cancellationToken
         );
