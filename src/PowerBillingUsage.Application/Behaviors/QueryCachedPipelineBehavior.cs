@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using PowerBillingUsage.Application.Abstractions.Messaging;
 using PowerBillingUsage.Domain.Abstractions.Services;
-using PowerBillingUsage.Domain.Abstractions.Shared;
 
 namespace PowerBillingUsage.Application.Behaviors;
 

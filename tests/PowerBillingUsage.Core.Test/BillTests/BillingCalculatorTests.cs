@@ -18,7 +18,7 @@ public class BillingCalculatorTests
 
     private readonly PowerBillingUsageWriteDbContext _context;
     private readonly BillManager _billManager;
-    private readonly ICacheService _cacheService;
+    private readonly IHybridCacheService _cacheService;
     private readonly ICacheKeyHelper<Bill> _cacheKeyHelper;
 
     public static IEnumerable<object[]> GetValidatedResidentialBillingData =>
@@ -153,14 +153,14 @@ public class BillingCalculatorTests
             .Options;
 
         _context = new PowerBillingUsageWriteDbContext(options);
-        
+
         var assembliesToScan = AppDomain.CurrentDomain.GetAssemblies()
             .Where(a => a.FullName!.StartsWith("PowerBillingUsage"))
             .ToList();
 
-        _cacheService = Mock.Of<ICacheService>();
+        _cacheService = Mock.Of<IHybridCacheService>();
         _cacheKeyHelper = new CacheKeyHelper<Bill>();
-        
+
         _billManager = new BillManager(new Repository<Bill, BillId>(_context, _cacheService, _cacheKeyHelper));
     }
 

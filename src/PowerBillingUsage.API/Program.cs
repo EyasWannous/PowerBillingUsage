@@ -35,6 +35,7 @@ builder.Services.AddDbContext<PowerBillingUsageReadDbContext>(options =>
 
 //builder.AddRedisDistributedCache("garnetcache");
 builder.AddRedisDistributedCache("rediscache");
+builder.Services.AddHybridCache();
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterAutoFacModules());
@@ -67,7 +68,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
-    
+
     app.UseExceptionHandler("/Error");
 }
 

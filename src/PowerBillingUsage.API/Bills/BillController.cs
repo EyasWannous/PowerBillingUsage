@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PowerBillingUsage.Application;
 using PowerBillingUsage.Application.Bills;
 using PowerBillingUsage.Application.Bills.DTOs;
 using PowerBillingUsage.Domain.Abstractions.Services;
