@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Caching.Hybrid;
 using Moq;
@@ -30,6 +31,7 @@ public class WriteRepositoryTests
 
         var options = new DbContextOptionsBuilder<PowerBillingUsageWriteDbContext>()
             .UseInMemoryDatabase(databaseName: databaseName, databaseRoot: inMemoryDbRoot)
+            .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
             .Options;
 
         _context = new PowerBillingUsageWriteDbContext(options);
@@ -235,5 +237,130 @@ public class WriteRepositoryTests
         result.Should().BeGreaterThan(0);
         var savedBill = await _context.Set<Bill>().FindAsync(bill.Id);
         savedBill.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task DeleteRangeAsync_ShouldRemoveEntitiesAndUpdateCache()
+    {
+        var bills = new List<Bill> { CreateSampleBill(), CreateSampleBill() };
+        await _context.Set<Bill>().AddRangeAsync(bills);
+        await _context.SaveChangesAsync();
+
+        var billIds = bills.Select(b => b.Id).ToList();
+        var keyOnes = billIds.Select(id => _cacheKeyHelper.MakeKeyOne(id)).ToList();
+
+        _mockCacheService
+            .Setup(x => x.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Returns(ValueTask.CompletedTask);
+
+        _mockCacheService
+            .Setup(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)), It.IsAny<CancellationToken>()))
+            .Returns(ValueTask.CompletedTask);
+
+        await _writeRepository.DeleteRangeAsync(billIds);
+        await _writeRepository.SaveChangesAsync();
+
+        var deletedBills = await _context.Set<Bill>().Where(x => billIds.Contains(x.Id)).ToListAsync();
+        deletedBills.Should().BeEmpty();
+
+        foreach (var keyOne in keyOnes)
+        {
+            _mockCacheService.Verify(x => x.RemoveAsync(keyOne, It.IsAny<CancellationToken>()), Times.Once);
+        }
+        _mockCacheService.Verify(x => x.RemoveAsync(_cacheKeyHelper.KeyAll, It.IsAny<CancellationToken>()), Times.Once);
+        _mockCacheService.Verify(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteAndSaveChangesAsync_ShouldRemoveEntityAndUpdateCacheInTransaction()
+    {
+        var bill = CreateSampleBill();
+        await _context.Set<Bill>().AddAsync(bill);
+        await _context.SaveChangesAsync();
+
+        var keyOne = _cacheKeyHelper.MakeKeyOne(bill.Id);
+
+        _mockCacheService
+            .Setup(x => x.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Returns(ValueTask.CompletedTask);
+
+        _mockCacheService
+            .Setup(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)), It.IsAny<CancellationToken>()))
+            .Returns(ValueTask.CompletedTask);
+
+        var result = await _writeRepository.DeleteAndSaveChangesAsync(bill);
+
+        result.Should().Be(1);
+        var deletedBill = await _context.Set<Bill>().FindAsync(bill.Id);
+        deletedBill.Should().BeNull();
+
+        _mockCacheService.Verify(x => x.RemoveAsync(_cacheKeyHelper.KeyAll, It.IsAny<CancellationToken>()), Times.Once);
+        _mockCacheService.Verify(x => x.RemoveAsync(keyOne, It.IsAny<CancellationToken>()), Times.Once);
+        _mockCacheService.Verify(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteRangeAndSaveChangesAsync_ShouldRemoveEntitiesAndUpdateCacheInTransaction()
+    {
+        var bills = new List<Bill> { CreateSampleBill(), CreateSampleBill() };
+        await _context.Set<Bill>().AddRangeAsync(bills);
+        await _context.SaveChangesAsync();
+
+        var billIds = bills.Select(b => b.Id).ToList();
+        var keyOnes = billIds.Select(id => _cacheKeyHelper.MakeKeyOne(id)).ToList();
+
+        _mockCacheService
+            .Setup(x => x.RemoveAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Returns(ValueTask.CompletedTask);
+
+        _mockCacheService
+            .Setup(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)), It.IsAny<CancellationToken>()))
+            .Returns(ValueTask.CompletedTask);
+
+        var result = await _writeRepository.DeleteRangeAndSaveChangesAsync(bills);
+
+        result.Should().Be(2);
+        var deletedBills = await _context.Set<Bill>().Where(x => billIds.Contains(x.Id)).ToListAsync();
+        deletedBills.Should().BeEmpty();
+
+        foreach (var keyOne in keyOnes)
+        {
+            _mockCacheService.Verify(x => x.RemoveAsync(keyOne, It.IsAny<CancellationToken>()), Times.Once);
+        }
+        _mockCacheService.Verify(x => x.RemoveAsync(_cacheKeyHelper.KeyAll, It.IsAny<CancellationToken>()), Times.Once);
+        _mockCacheService.Verify(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteRangeAsync_ShouldThrowWhenNotAllItemsFound()
+    {
+        var existingBill = CreateSampleBill();
+        await _context.Set<Bill>().AddAsync(existingBill);
+        await _context.SaveChangesAsync();
+
+        var nonExistingBillId = new BillId(Guid.NewGuid());
+        var billIds = new List<BillId> { existingBill.Id, nonExistingBillId };
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _writeRepository.DeleteRangeAsync(billIds));
+    }
+
+    [Fact]
+    public async Task DeleteRangeAndSaveChangesAsync_ShouldRollbackWhenNotAllItemsDeleted()
+    {
+        var bills = new List<Bill> { CreateSampleBill(), CreateSampleBill() };
+        await _context.Set<Bill>().AddRangeAsync(bills);
+        await _context.SaveChangesAsync();
+
+        // Simulate a failure by passing only one item but both IDs
+        var billIds = bills.Select(b => b.Id).ToList();
+        var itemsToDelete = new List<Bill> { bills[0] };
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _writeRepository.DeleteRangeAndSaveChangesAsync(itemsToDelete));
+
+        // Verify the transaction was rolled back (items still exist)
+        var remainingBills = await _context.Set<Bill>().Where(x => billIds.Contains(x.Id)).ToListAsync();
+        remainingBills.Should().HaveCount(2);
     }
 }

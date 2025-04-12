@@ -2,10 +2,8 @@
 using PowerBillingUsage.Domain;
 using PowerBillingUsage.Domain.Abstractions.Helpers;
 using PowerBillingUsage.Domain.Abstractions.Repositories;
-using PowerBillingUsage.Domain.Abstractions.Services;
 using PowerBillingUsage.Infrastructure.EntityFramework.Repositories;
 using PowerBillingUsage.Infrastructure.Helpers;
-using PowerBillingUsage.Infrastructure.Services;
 using System.Reflection;
 
 namespace PowerBillingUsage.Infrastructure;

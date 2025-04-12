@@ -27,7 +27,7 @@ public abstract class BaseRepository<TModel, TEntityId, TDbContext> : IBaseRepos
         CacheKeyHelper = cacheKeyHelper;
     }
 
-    public async Task<PaingationResponse<TModel>> GetPaginateAsync(int skip, int take, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponse<TModel>> GetPaginateAsync(int skip, int take, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         var paginateKey = CacheKeyHelper.MakePaginateKey(skip, take);
 
@@ -42,7 +42,7 @@ public abstract class BaseRepository<TModel, TEntityId, TDbContext> : IBaseRepos
                     .ToListAsync(ct);
 
                 var totalCount = await Context.Set<TModel>().CountAsync(ct);
-                return new PaingationResponse<TModel>(totalCount, items);
+                return new PaginatedResponse<TModel>(totalCount, items);
             },
             tags: [CacheKeyHelper.PaginateKey],
             expiration: expiration,

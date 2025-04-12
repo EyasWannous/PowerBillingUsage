@@ -42,7 +42,7 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService, IScoped
         return response.Value.MapBill();
     }
 
-    public async Task<Result<PaingationResponse<BillReadModelDto>>> GetListAsync(GetPaginateListDto input, CancellationToken cancellationToken = default)
+    public async Task<Result<PaginatedResponse<BillReadModelDto>>> GetListAsync(GetPaginateListDto input, CancellationToken cancellationToken = default)
     {
         var response = await _sender.Send(
             new GetPaginateBillsQuery(
@@ -53,9 +53,9 @@ public class BillingCalculatorAppService : IBillingCalculatorAppService, IScoped
         );
 
         if (!response.IsSuccess)
-            return Result<PaingationResponse<BillReadModelDto>>.ValidationFailure(response.Error);
+            return Result<PaginatedResponse<BillReadModelDto>>.ValidationFailure(response.Error);
 
-        return new PaingationResponse<BillReadModelDto>(
+        return new PaginatedResponse<BillReadModelDto>(
             response.Value.TotalCount,
             [.. response.Value.Items.Select(x => x.MapBillReadModel())]
         );

@@ -11,7 +11,7 @@ public interface IBaseRepository<TModel, TEntityId> : IDisposable
     Task<int> CountAsync(Expression<Func<TModel, bool>> criteria, CancellationToken cancellationToken = default);
     Task<TModel?> GetByIdAsync(TEntityId id, TimeSpan? expiration = null, CancellationToken cancellationToken = default);
     Task<IEnumerable<TModel>> GetListAsync(TimeSpan? expiration = null, CancellationToken cancellationToken = default);
-    Task<PaingationResponse<TModel>> GetPaginateAsync(int skip, int take, TimeSpan? expiration = null, CancellationToken cancellationToken = default);
+    Task<PaginatedResponse<TModel>> GetPaginateAsync(int skip, int take, TimeSpan? expiration = null, CancellationToken cancellationToken = default);
     Task<IQueryable<TModel>> GetQueryableAsync();
     Task<IQueryable<TModel>> GetQueryableWithDetailsAsync(params List<Expression<Func<TModel, object>>>? navigationPropertyPaths);
 }

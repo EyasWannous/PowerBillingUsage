@@ -82,12 +82,12 @@ public class BaseRepositoryTests
         var skip = 0;
         var take = 10;
         var paginateKey = _cacheKeyHelper.MakePaginateKey(skip, take);
-        var expectedResponse = new PaingationResponse<Bill>(3, [CreateSampleBill()]);
+        var expectedResponse = new PaginatedResponse<Bill>(3, [CreateSampleBill()]);
 
         _mockCacheService
             .Setup(x => x.GetOrCreateAsync(
                 paginateKey,
-                It.IsAny<Func<CancellationToken, ValueTask<PaingationResponse<Bill>>>>(),
+                It.IsAny<Func<CancellationToken, ValueTask<PaginatedResponse<Bill>>>>(),
                 HybridCacheEntryFlags.None,
                 It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)),
                 It.IsAny<TimeSpan?>(),
@@ -101,7 +101,7 @@ public class BaseRepositoryTests
         _mockCacheService.Verify(
             x => x.GetOrCreateAsync(
                 paginateKey,
-                It.IsAny<Func<CancellationToken, ValueTask<PaingationResponse<Bill>>>>(),
+                It.IsAny<Func<CancellationToken, ValueTask<PaginatedResponse<Bill>>>>(),
                 HybridCacheEntryFlags.None,
                 It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)),
                 It.IsAny<TimeSpan?>(),
@@ -120,7 +120,7 @@ public class BaseRepositoryTests
         _mockCacheService
             .Setup(x => x.GetOrCreateAsync(
                 paginateKey,
-                It.IsAny<Func<CancellationToken, ValueTask<PaingationResponse<Bill>>>>(),
+                It.IsAny<Func<CancellationToken, ValueTask<PaginatedResponse<Bill>>>>(),
                 HybridCacheEntryFlags.None,
                 It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)),
                 It.IsAny<TimeSpan?>(),
@@ -128,7 +128,7 @@ public class BaseRepositoryTests
                 It.IsAny<CancellationToken>()))
             .Returns(async (
                 string key,
-                Func<CancellationToken, ValueTask<PaingationResponse<Bill>>> factory,
+                Func<CancellationToken, ValueTask<PaginatedResponse<Bill>>> factory,
                 HybridCacheEntryFlags flags,
                 IEnumerable<string>? tags,
                 TimeSpan? expiration,

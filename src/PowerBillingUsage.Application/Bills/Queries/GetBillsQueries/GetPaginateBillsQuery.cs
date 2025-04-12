@@ -5,9 +5,9 @@ using PowerBillingUsage.Domain.Bills;
 
 namespace PowerBillingUsage.Application.Bills.Queries.GetBillsQueries;
 
-public record GetPaginateBillsQuery(int Skip, int Take) : IQuery<PaingationResponse<BillReadModel>>;
+public record GetPaginateBillsQuery(int Skip, int Take) : IQuery<PaginatedResponse<BillReadModel>>;
 
-internal sealed class GetPaginateBillsQueryHandler : IQueryHandler<GetPaginateBillsQuery, PaingationResponse<BillReadModel>>
+internal sealed class GetPaginateBillsQueryHandler : IQueryHandler<GetPaginateBillsQuery, PaginatedResponse<BillReadModel>>
 {
     private readonly IReadRepository<BillReadModel, BillId> _billReadModelRepository;
 
@@ -16,7 +16,7 @@ internal sealed class GetPaginateBillsQueryHandler : IQueryHandler<GetPaginateBi
         _billReadModelRepository = billReadModelRepository;
     }
 
-    public async Task<Result<PaingationResponse<BillReadModel>>> Handle(GetPaginateBillsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedResponse<BillReadModel>>> Handle(GetPaginateBillsQuery request, CancellationToken cancellationToken)
     {
         try
         {
@@ -24,7 +24,7 @@ internal sealed class GetPaginateBillsQueryHandler : IQueryHandler<GetPaginateBi
         }
         catch (Exception ex)
         {
-            return Result<PaingationResponse<BillReadModel>>.ValidationFailure(BillReadModelErrors.GetPaginateBillsFailure(ex.Message));
+            return Result<PaginatedResponse<BillReadModel>>.ValidationFailure(BillReadModelErrors.GetPaginateBillsFailure(ex.Message));
         }
     }
 }
