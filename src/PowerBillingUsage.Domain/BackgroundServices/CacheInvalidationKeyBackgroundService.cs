@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Hosting;
-using PowerBillingUsage.Domain.Enums;
 using StackExchange.Redis;
 
 namespace PowerBillingUsage.Domain.BackgroundServices;
@@ -24,7 +23,7 @@ public class CacheInvalidationKeyBackgroundService : BackgroundService
         var subscriber = _connectionMultiplexer.GetSubscriber();
 
         await subscriber.SubscribeAsync(
-            RedisChannel.Literal(ConstantNames.RedisChannelCacheInvalidationKeyName),
+            RedisChannel.Literal(PowerBillingUsageDomainConstant.RedisChannelCacheInvalidationKeyName),
             async (_, key) =>
             {
                 await _hybridCache.RemoveAsync(key.ToString(), stoppingToken);

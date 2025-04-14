@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Hybrid;
+using PowerBillingUsage.Domain;
 using PowerBillingUsage.Domain.Abstractions.RegisteringDependencies;
 using PowerBillingUsage.Domain.Abstractions.Services;
-using PowerBillingUsage.Domain.Enums;
 using StackExchange.Redis;
 
 namespace PowerBillingUsage.Infrastructure.Services;
@@ -71,7 +71,7 @@ public class HybridCacheService : IHybridCacheService, IScopedDependency
 
         var subscriber = _connectionMultiplexer.GetSubscriber();
         await subscriber.PublishAsync(
-            RedisChannel.Literal(ConstantNames.RedisChannelCacheInvalidationKeyName),
+            RedisChannel.Literal(PowerBillingUsageDomainConstant.RedisChannelCacheInvalidationKeyName),
             new RedisValue(key)
         );
 
@@ -87,7 +87,7 @@ public class HybridCacheService : IHybridCacheService, IScopedDependency
             tasks.Add(_hybridCache.RemoveByTagAsync(tag, cancellationToken).AsTask());
             tasks.Add(
                 subscriber.PublishAsync(
-                    RedisChannel.Literal(ConstantNames.RedisChannelCacheInvalidationTagName),
+                    RedisChannel.Literal(PowerBillingUsageDomainConstant.RedisChannelCacheInvalidationTagName),
                     new RedisValue(tag)
                 )
            );

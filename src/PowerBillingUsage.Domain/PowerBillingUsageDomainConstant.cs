@@ -1,6 +1,6 @@
-﻿namespace PowerBillingUsage.Domain.Enums;
+﻿namespace PowerBillingUsage.Domain;
 
-public class ConstantNames
+public class PowerBillingUsageDomainConstant
 {
     public const string RedisChannelCacheInvalidationKeyName = "cache-invalidation-key";
     public const string RedisChannelCacheInvalidationTagName = "cache-invalidation-tag";
