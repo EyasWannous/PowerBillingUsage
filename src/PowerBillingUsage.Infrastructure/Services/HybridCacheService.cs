@@ -71,7 +71,7 @@ public class HybridCacheService : IHybridCacheService, IScopedDependency
 
         var subscriber = _connectionMultiplexer.GetSubscriber();
         await subscriber.PublishAsync(
-            RedisChannel.Literal(PowerBillingUsageDomainConstant.RedisChannelCacheInvalidationKeyName),
+            RedisChannel.Literal(PowerBillingUsageDomainConstants.RedisChannelCacheInvalidationKeyName),
             new RedisValue(key)
         );
 
@@ -87,7 +87,7 @@ public class HybridCacheService : IHybridCacheService, IScopedDependency
             tasks.Add(_hybridCache.RemoveByTagAsync(tag, cancellationToken).AsTask());
             tasks.Add(
                 subscriber.PublishAsync(
-                    RedisChannel.Literal(PowerBillingUsageDomainConstant.RedisChannelCacheInvalidationTagName),
+                    RedisChannel.Literal(PowerBillingUsageDomainConstants.RedisChannelCacheInvalidationTagName),
                     new RedisValue(tag)
                 )
            );

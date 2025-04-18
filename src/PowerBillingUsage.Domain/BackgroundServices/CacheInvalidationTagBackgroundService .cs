@@ -23,7 +23,7 @@ public class CacheInvalidationTagBackgroundService : BackgroundService
         var subscriber = _connectionMultiplexer.GetSubscriber();
 
         await subscriber.SubscribeAsync(
-            RedisChannel.Literal(PowerBillingUsageDomainConstant.RedisChannelCacheInvalidationTagName),
+            RedisChannel.Literal(PowerBillingUsageDomainConstants.RedisChannelCacheInvalidationTagName),
             async (_, tag) =>
             {
                 await _hybridCache.RemoveByTagAsync(tag.ToString(), stoppingToken);

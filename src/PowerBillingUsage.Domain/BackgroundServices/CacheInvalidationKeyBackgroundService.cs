@@ -23,7 +23,7 @@ public class CacheInvalidationKeyBackgroundService : BackgroundService
         var subscriber = _connectionMultiplexer.GetSubscriber();
 
         await subscriber.SubscribeAsync(
-            RedisChannel.Literal(PowerBillingUsageDomainConstant.RedisChannelCacheInvalidationKeyName),
+            RedisChannel.Literal(PowerBillingUsageDomainConstants.RedisChannelCacheInvalidationKeyName),
             async (_, key) =>
             {
                 await _hybridCache.RemoveAsync(key.ToString(), stoppingToken);
