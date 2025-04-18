@@ -7,7 +7,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using PowerBillingUsage.API;
 using PowerBillingUsage.API.Bills;
 using PowerBillingUsage.API.Extemsions;
-using PowerBillingUsage.Domain.BackgroundServices;
 using PowerBillingUsage.Infrastructure.EntityFramework;
 using PowerBillingUsage.Infrastructure.Health;
 using Serilog;
