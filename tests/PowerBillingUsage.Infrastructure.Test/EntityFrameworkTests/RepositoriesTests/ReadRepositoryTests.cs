@@ -142,10 +142,10 @@ public class ReadRepositoryTests
         // Arrange
         _mockCacheService
             .Setup(x => x.GetOrCreateAsync<IEnumerable<BillReadModel>>(
-                _cacheKeyHelper.KeyAll,
+                _cacheKeyHelper.AllKey,
                 It.IsAny<Func<CancellationToken, ValueTask<IEnumerable<BillReadModel>>>>(),
                 HybridCacheEntryFlags.None,
-                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.KeyAll)),
+                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.AllKey)),
                 It.IsAny<TimeSpan?>(),
                 null,
                 It.IsAny<CancellationToken>()))

@@ -130,11 +130,11 @@ public class RepositoryTests
         var keyOne = _cacheKeyHelper.MakeKeyOne(bill.Id);
 
         _mockCacheService
-            .Setup(x => x.RemoveAsync(_cacheKeyHelper.KeyAll, It.IsAny<CancellationToken>()))
+            .Setup(x => x.RemoveAsync(_cacheKeyHelper.AllKey, It.IsAny<CancellationToken>()))
             .Returns(ValueTask.CompletedTask);
 
         _mockCacheService
-            .Setup(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)), It.IsAny<CancellationToken>()))
+            .Setup(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKeyTag)), It.IsAny<CancellationToken>()))
             .Returns(ValueTask.CompletedTask);
 
         _mockCacheService
@@ -205,10 +205,10 @@ public class RepositoryTests
     {
         _mockCacheService
             .Setup(x => x.GetOrCreateAsync<IEnumerable<Bill>>(
-                _cacheKeyHelper.KeyAll,
+                _cacheKeyHelper.AllKey,
                 It.IsAny<Func<CancellationToken, ValueTask<IEnumerable<Bill>>>>(),
                 HybridCacheEntryFlags.None,
-                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.KeyAll)),
+                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.AllKey)),
                 It.IsAny<TimeSpan?>(),
                 null,
                 It.IsAny<CancellationToken>()))
@@ -230,7 +230,7 @@ public class RepositoryTests
         var keyOne = _cacheKeyHelper.MakeKeyOne(bill.Id);
 
         _mockCacheService
-            .Setup(x => x.RemoveAsync(_cacheKeyHelper.KeyAll, It.IsAny<CancellationToken>()))
+            .Setup(x => x.RemoveAsync(_cacheKeyHelper.AllKey, It.IsAny<CancellationToken>()))
             .Returns(ValueTask.CompletedTask);
 
         _mockCacheService
@@ -238,7 +238,7 @@ public class RepositoryTests
             .Returns(ValueTask.CompletedTask);
 
         _mockCacheService
-            .Setup(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)), It.IsAny<CancellationToken>()))
+            .Setup(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKeyTag)), It.IsAny<CancellationToken>()))
             .Returns(ValueTask.CompletedTask);
     }
 
@@ -247,7 +247,7 @@ public class RepositoryTests
         var keyOne = _cacheKeyHelper.MakeKeyOne(bill.Id);
 
         _mockCacheService
-            .Setup(x => x.RemoveAsync(_cacheKeyHelper.KeyAll, It.IsAny<CancellationToken>()))
+            .Setup(x => x.RemoveAsync(_cacheKeyHelper.AllKey, It.IsAny<CancellationToken>()))
             .Returns(ValueTask.CompletedTask);
 
         _mockCacheService
@@ -255,7 +255,7 @@ public class RepositoryTests
             .Returns(ValueTask.CompletedTask);
 
         _mockCacheService
-            .Setup(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)), It.IsAny<CancellationToken>()))
+            .Setup(x => x.RemoveByTagsAsync(It.Is<List<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKeyTag)), It.IsAny<CancellationToken>()))
             .Returns(ValueTask.CompletedTask);
 
         _mockCacheService

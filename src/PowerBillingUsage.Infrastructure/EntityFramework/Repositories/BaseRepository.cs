@@ -44,7 +44,7 @@ public abstract class BaseRepository<TModel, TEntityId, TDbContext> : IBaseRepos
                 var totalCount = await Context.Set<TModel>().CountAsync(ct);
                 return new PaginatedResponse<TModel>(totalCount, items);
             },
-            tags: [CacheKeyHelper.PaginateKey],
+            tags: [CacheKeyHelper.PaginateKeyTag],
             expiration: expiration,
             cancellationToken: cancellationToken
         );
@@ -53,11 +53,11 @@ public abstract class BaseRepository<TModel, TEntityId, TDbContext> : IBaseRepos
     public async Task<IEnumerable<TModel>> GetListAsync(TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         return await CacheService.GetOrCreateAsync<IEnumerable<TModel>>(
-            CacheKeyHelper.KeyAll,
+            CacheKeyHelper.AllKey,
             async ct => await Context.Set<TModel>()
                 .AsNoTracking()
                 .ToListAsync(cancellationToken: ct),
-            tags: [CacheKeyHelper.KeyAll],
+            tags: [CacheKeyHelper.AllKey],
             expiration: expiration,
             cancellationToken: cancellationToken
         );

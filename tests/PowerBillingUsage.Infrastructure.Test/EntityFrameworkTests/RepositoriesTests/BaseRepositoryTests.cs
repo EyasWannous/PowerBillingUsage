@@ -89,7 +89,7 @@ public class BaseRepositoryTests
                 paginateKey,
                 It.IsAny<Func<CancellationToken, ValueTask<PaginatedResponse<Bill>>>>(),
                 HybridCacheEntryFlags.None,
-                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)),
+                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKeyTag)),
                 It.IsAny<TimeSpan?>(),
                 null,
                 It.IsAny<CancellationToken>()))
@@ -103,7 +103,7 @@ public class BaseRepositoryTests
                 paginateKey,
                 It.IsAny<Func<CancellationToken, ValueTask<PaginatedResponse<Bill>>>>(),
                 HybridCacheEntryFlags.None,
-                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)),
+                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKeyTag)),
                 It.IsAny<TimeSpan?>(),
                 null,
                 It.IsAny<CancellationToken>()),
@@ -122,7 +122,7 @@ public class BaseRepositoryTests
                 paginateKey,
                 It.IsAny<Func<CancellationToken, ValueTask<PaginatedResponse<Bill>>>>(),
                 HybridCacheEntryFlags.None,
-                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKey)),
+                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.PaginateKeyTag)),
                 It.IsAny<TimeSpan?>(),
                 null,
                 It.IsAny<CancellationToken>()))
@@ -152,10 +152,10 @@ public class BaseRepositoryTests
 
         _mockCacheService
             .Setup(x => x.GetOrCreateAsync(
-                _cacheKeyHelper.KeyAll,
+                _cacheKeyHelper.AllKey,
                 It.IsAny<Func<CancellationToken, ValueTask<IEnumerable<Bill>>>>(),
                 HybridCacheEntryFlags.None,
-                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.KeyAll)),
+                It.Is<IEnumerable<string>>(tags => tags.Contains(_cacheKeyHelper.AllKey)),
                 It.IsAny<TimeSpan?>(),
                 null,
                 It.IsAny<CancellationToken>()))

@@ -25,8 +25,8 @@ public class WriteRepository<Entity, EntityId> :
     public async Task<Entity> InsertAsync(Entity item, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
     {
         await Task.WhenAll(
-            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
-            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKey], cancellationToken).AsTask(),
+            CacheService.RemoveAsync(CacheKeyHelper.AllKey, cancellationToken).AsTask(),
+            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKeyTag], cancellationToken).AsTask(),
             UpdateCountCacheAsync(1, expiration, cancellationToken)
         );
 
@@ -53,9 +53,9 @@ public class WriteRepository<Entity, EntityId> :
         var keyOne = CacheKeyHelper.MakeKeyOne(id);
 
         await Task.WhenAll(
-            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
+            CacheService.RemoveAsync(CacheKeyHelper.AllKey, cancellationToken).AsTask(),
             CacheService.RemoveAsync(keyOne, cancellationToken).AsTask(),
-            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKey], cancellationToken).AsTask(),
+            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKeyTag], cancellationToken).AsTask(),
             UpdateCountCacheAsync(-1, expiration, cancellationToken)
         );
 
@@ -76,8 +76,8 @@ public class WriteRepository<Entity, EntityId> :
         }
 
         tasks.AddRange(
-            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
-            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKey], cancellationToken).AsTask(),
+            CacheService.RemoveAsync(CacheKeyHelper.AllKey, cancellationToken).AsTask(),
+            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKeyTag], cancellationToken).AsTask(),
             UpdateCountCacheAsync(-1, expiration, cancellationToken)
         );
 
@@ -100,9 +100,9 @@ public class WriteRepository<Entity, EntityId> :
         var keyOne = CacheKeyHelper.MakeKeyOne(item.Id);
 
         await Task.WhenAll(
-            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
+            CacheService.RemoveAsync(CacheKeyHelper.AllKey, cancellationToken).AsTask(),
             CacheService.RemoveAsync(keyOne, cancellationToken).AsTask(),
-            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKey], cancellationToken).AsTask(),
+            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKeyTag], cancellationToken).AsTask(),
             UpdateCountCacheAsync(-1, expiration, cancellationToken)
         );
 
@@ -132,8 +132,8 @@ public class WriteRepository<Entity, EntityId> :
         }
 
         tasks.AddRange(
-            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
-            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKey], cancellationToken).AsTask(),
+            CacheService.RemoveAsync(CacheKeyHelper.AllKey, cancellationToken).AsTask(),
+            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKeyTag], cancellationToken).AsTask(),
             UpdateCountCacheAsync(-items.Count, expiration, cancellationToken)
         );
 
@@ -149,9 +149,9 @@ public class WriteRepository<Entity, EntityId> :
         var keyOne = CacheKeyHelper.MakeKeyOne(item.Id);
 
         await Task.WhenAll(
-            CacheService.RemoveAsync(CacheKeyHelper.KeyAll, cancellationToken).AsTask(),
+            CacheService.RemoveAsync(CacheKeyHelper.AllKey, cancellationToken).AsTask(),
             CacheService.RemoveAsync(keyOne, cancellationToken).AsTask(),
-            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKey], cancellationToken).AsTask()
+            CacheService.RemoveByTagsAsync([CacheKeyHelper.PaginateKeyTag], cancellationToken).AsTask()
         );
 
         Context.Set<Entity>().Update(item);
